@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ITCM</string>
+    <string name="str_logo_title">NTU  -  iTCM</string>
+    <string name="str_sign_up_cap">SIGN UP</string>
+    <string name="str_login_cap">LOGIN</string>
+    <string name="str_dashboard">Dashboard</string>
+    <string name="str_preference">Preference</string>
+    <string name="str_reward">Reward</string>
+    <string name="str_me">Me</string>
+    <string name="str_email_hint">Email</string>
+    <string name="str_password_hint">Password</string>
+    <string name="str_confirm_password_hint">Confirm Password</string>
+    <string name="str_firstname_hint">First Name</string>
+    <string name="str_lastname_hint">Last Name</string>
+    <string name="str_age_hint">Age: 25</string>
+    <string name="str_gender_hint">Gender: Male</string>
+    <string name="str_age_format">Age: %d</string>
+    <string name="str_gender_format">Gender: %s</string>
+    <string name="str_forgot_password">Forgor Password?</string>
+</resources>

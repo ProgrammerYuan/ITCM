@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--common colors section-->
+    <color name = "trans">#00000000</color>
+    <color name = "trans_75">#bF000000</color>
+    <color name = "trans_50">#7F000000</color>
+    <color name = "trans_25">#3F000000</color>
+    <color name = "trans_12">#1F000000</color>
+    <color name = "trans_white_80">#CCFFFFFF</color>
+    <color name = "trans_white_75">#bFFFFFFF</color>
+    <color name = "trans_white_50">#7FFFFFFF</color>
+    <color name = "trans_white_25">#3FFFFFFF</color>
+    <color name = "trans_white_12">#1FFFFFFF</color>
+    <color name = "white">#FFFFFF</color>
+    <!--customized colors section-->
+    <color name = "textGray">#4D4D4D</color>
+    <color name = "textLightGray">#D4D4D4</color>
+    <color name = "backGround">#F2F2F2</color>
+    <color name = "lightGrayIcon">#A1A1A1</color>
+    <color name = "mainTheme">#58CDC4</color>
+    <color name = "transMainTheme50">#8858CDC4</color>
+    <color name = "secondTheme">#78D7CF</color>
+    <color name = "thirdTheme">#9AE1DC</color>
+    <color name = "forthTheme">#BBEBE7</color>
+</resources>
