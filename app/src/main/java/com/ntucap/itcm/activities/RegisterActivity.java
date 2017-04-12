@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.dpizarro.uipicker.library.picker.PickerUI;
 import com.dpizarro.uipicker.library.picker.PickerUISettings;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.utils.ValidationUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,6 +82,14 @@ public class RegisterActivity extends AppCompatActivity
         new CountTextWatcher(et_lastname_input);
         iv_mask.setOnTouchListener(this);
         mPicker.setOnClickItemPickerUIListener(this);
+    }
+
+    private boolean signUp() {
+        String email = et_email_input.getText().toString();
+        if(!ValidationUtility.validate(email)) {
+
+        }
+        return true;
     }
 
     private void controlMask(boolean show, int duration) {

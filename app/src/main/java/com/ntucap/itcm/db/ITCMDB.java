@@ -1,22 +1,27 @@
 package com.ntucap.itcm.db;
 
+import android.content.Context;
+
+import com.ntucap.itcm.classes.ITCMObject;
+import com.ntucap.itcm.classes.ITCMUser;
+
+import java.util.ArrayList;
+
 /**
  * Created by ProgrammerYuan on 11/04/17.
  */
 
 public class ITCMDB {
 
-    public static final String COMMA_SEP = ",";
+    private ITCMSQLHelper mDBHelper;
+    private Context context;
+    private static ArrayList<Class<? extends ITCMObject>> classes;
 
-    public static final String SQL_TEXT_TYPE = " TEXT" + COMMA_SEP;
-    public static final String SQL_INTEGER_TYPE = " INTEGER" + COMMA_SEP;
-    public static final String SQL_INTEGER_PRIMARY_TYPE = " INTEGER PRIMARY KEY" + COMMA_SEP;
-    public static final String SQL_LONG_TYPE = " LONG" + COMMA_SEP;
-    public static final String SQL_VARCHAR255_TYPE = "VARCHAR(255)" + COMMA_SEP;
-    public static final String SQL_VARCHAR_TYPE_FORMAT = " VARCHAR(%d)" + COMMA_SEP;
-    public static final String SQL_DOUBLE_TYPE = " DOUBLE" + COMMA_SEP;
-    public static final String SQL_DATE_TYPE = " INTEGER" + COMMA_SEP;
-    public static final String SQL_TIMESTAMP_TYPE = " TIMESTAMP" + COMMA_SEP;
-
+    public ITCMDB(Context context) {
+        this.context = context;
+        classes = new ArrayList<>();
+        classes.add(ITCMUser.class);
+        mDBHelper = new ITCMSQLHelper(context, classes);
+    }
 
 }
