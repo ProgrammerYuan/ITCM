@@ -1,5 +1,6 @@
 package com.ntucap.itcm.utils;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,9 +13,13 @@ public class ValidationUtility {
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    public static boolean validate(String emailStr) {
+    public static boolean validateEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
         return matcher.find();
+    }
+
+    public static <K,V> V validateHashmapGet(HashMap<K, V> map, K key, V defaultValue){
+        return map.containsKey(key) ? map.get(key) : defaultValue;
     }
 
 }

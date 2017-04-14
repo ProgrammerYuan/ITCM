@@ -15,11 +15,16 @@ import android.widget.TextView;
 
 import com.dpizarro.uipicker.library.picker.PickerUI;
 import com.dpizarro.uipicker.library.picker.PickerUISettings;
+import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.ValidationUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity
         implements View.OnClickListener, PickerUI.PickerUIItemClickListener
@@ -35,7 +40,8 @@ public class RegisterActivity extends AppCompatActivity
     private ArrayList<String> ages, genders;
     private int pickerSelectedID;
     private int inputCount = 0;
-    private String genderFormat, ageFormat;
+    private int age = -1;
+    private String gender, genderFormat, ageFormat;
 
     private static final int MAX_INPUT_COUNT = 7;
     private static final int ALPHA_ANIM_DURATION = 400;
@@ -84,12 +90,58 @@ public class RegisterActivity extends AppCompatActivity
         mPicker.setOnClickItemPickerUIListener(this);
     }
 
-    private boolean signUp() {
+    private HashMap<String, String> checkSignUpInput() {
+        HashMap<String, String> ret = new HashMap<>();
         String email = et_email_input.getText().toString();
-        if(!ValidationUtility.validate(email)) {
-
+        if(!ValidationUtility.validateEmail(email)) {
+            SuperToast.create(this, "Not a valid Email Address", Style.DURATION_MEDIUM).show();
+            return null;
         }
-        return true;
+
+        String password = et_password_input.getText().toString(),
+                passwordConfirm = et_password_comfirm_input.getText().toString();
+        if(password.length() == 0) {
+            SuperToast.create(this, "Please input password", Style.DURATION_MEDIUM).show();
+            return null;
+        }
+
+        if(passwordConfirm.length() == 0) {
+            SuperToast.create(this, "Please confirm password", Style.DURATION_MEDIUM).show();
+            return null;
+        }
+
+        if(!password.equals(passwordConfirm)) {
+            SuperToast.create(this, "Inconsistent Password", Style.DURATION_MEDIUM).show();
+            return null;
+        }
+
+        String firstName = et_firstname_input.getText().toString(),
+                lastName = et_lastname_input.getText().toString();
+
+        if(firstName.length() == 0) {
+            SuperToast.create(this, "Please input firstname", Style.DURATION_MEDIUM).show();
+            return null;
+        }
+
+        if(lastName.length() == 0) {
+            SuperToast.create(this, "Please input lastname", Style.DURATION_MEDIUM).show();
+            return null;
+        }
+
+        ret.put("email", email);
+        ret.put("password", password);
+        ret.put("firstname", firstName);
+        ret.put("lastname", lastName);
+        ret.put("age", String.valueOf(age));
+        ret.put("gender", gender);
+        return ret;
+    }
+
+    private void signUp(HashMap<String, String> parameters) {
+        if(parameters == null) return;
+        ITCMUser user = new ITCMUser(parameters);
+        long id = ITCMDB.saveUser(user);
+        ITCMUser testUser = ITCMDB.getSingleUser(id);
     }
 
     private void controlMask(boolean show, int duration) {
@@ -111,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity
     private void setSignupBtnState() {
         if(inputCount == 0) {
             tv_signup_btn.setEnabled(false);
-        } else {
+        } else if (inputCount == MAX_INPUT_COUNT){
             tv_signup_btn.setEnabled(true);
         }
     }
@@ -122,6 +174,7 @@ public class RegisterActivity extends AppCompatActivity
         Intent intent;
         switch (id) {
             case R.id.tv_signup_confirm_act_register:
+                signUp(checkSignUpInput());
                 break;
             case R.id.iv_back_arrow_act_register:
                 intent = new Intent(this, EntranceActivity.class);
@@ -146,14 +199,16 @@ public class RegisterActivity extends AppCompatActivity
     public void onItemClickPickerUI(int which, int position, String valueResult) {
         Log.e(LOG_TAG, which + " / " + position + " / " + valueResult);
         Log.e(LOG_TAG, "R.id.picker:" + R.id.picker_ui_act_register);
-        int age = -1;
+        int value = -1;
         try {
-            age = Integer.parseInt(valueResult);
+            value = Integer.parseInt(valueResult);
+            age = value;
         } catch (NumberFormatException e) {
             Log.e(LOG_TAG, valueResult);
+            gender = valueResult;
         }
         if(pickerSelectedID == position) {
-            if(age == -1) {
+            if(value == -1) {
                 if(tv_gender_input.getText().length() == 0) inputCount ++;
                 tv_gender_input.setText(String.format(genderFormat, valueResult));
             } else {

@@ -14,7 +14,6 @@ import com.ntucap.itcm.db.ITCMDB;
 
 public class ITCMApplication extends Application {
 
-    public static ITCMDB db;
     public static RequestQueue queue;
 
     public ITCMApplication() {
@@ -24,9 +23,8 @@ public class ITCMApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        db = new ITCMDB(this);
+        ITCMDB.init(this);
         queue = Volley.newRequestQueue(this);
-        addVolleyRequest(new StringRequest(Request.Method.GET, "test", null, null));
     }
 
     public static <T> Request<T> addVolleyRequest(Request<T> request) {

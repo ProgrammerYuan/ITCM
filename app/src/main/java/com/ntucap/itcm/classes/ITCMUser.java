@@ -5,14 +5,18 @@ import android.database.Cursor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ntucap.itcm.utils.DBUtility;
+import com.ntucap.itcm.utils.ValidationUtility;
+
+import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by ProgrammerYuan on 10/04/17.
  */
 
-public class ITCMUser extends ITCMObject {
+public class ITCMUser extends ITCMObject implements Serializable{
 
-    private int mId;
+    private long mId;
     private int mAge;
     private String mEmail;
     private String mFirstName;
@@ -40,12 +44,31 @@ public class ITCMUser extends ITCMObject {
     }
 
     public ITCMUser(Cursor cursor) {
+        mId = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_ID));
+        mEmail = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_EMAIL));
+        mPassword = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PASSWORD));
+        mFirstName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_FIRSTNAME));
+        mLastName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_LASTNAME));
+        mAge = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_AGE));
+        mGender = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_GENDER));
+        mIsCurrentUser = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_CURRENT_USER)) > 0;
+    }
 
+    /** For Test Cases
+     *
+     */
+    public ITCMUser(HashMap<String, String> paras) {
+        mEmail = ValidationUtility.validateHashmapGet(paras, "email", "");
+        mPassword = ValidationUtility.validateHashmapGet(paras, "password", "");
+        mFirstName = ValidationUtility.validateHashmapGet(paras, "firstname", "");
+        mLastName = ValidationUtility.validateHashmapGet(paras, "lastname", "");
+        mGender = ValidationUtility.validateHashmapGet(paras, "gender", "");
+        mAge = Integer.parseInt(ValidationUtility.validateHashmapGet(paras, "age", "0"));
     }
 
     @Override
     public String getCreateTableSQL() {
-        return "CREATE TABLE " + DBUtility.stringToSQLWrapper(TABLE_NAME) + " （" +
+        return "CREATE TABLE IF NOT EXISTS " + DBUtility.stringToSQLWrapper(TABLE_NAME) + "(" +
                 DBUtility.stringToSQLWrapper(COLUMN_NAME_ID) + DBUtility.SQL_INTEGER_PRIMARY_TYPE +
                 DBUtility.stringToSQLWrapper(COLUMN_NAME_EMAIL) + DBUtility.SQL_VARCHAR255_TYPE +
                 DBUtility.stringToSQLWrapper(COLUMN_NAME_PASSWORD) + DBUtility.SQL_VARCHAR255_TYPE +
@@ -60,7 +83,6 @@ public class ITCMUser extends ITCMObject {
     @Override
     public ContentValues getUpdateContentValue() {
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_NAME_ID, mId);
         cv.put(COLUMN_NAME_EMAIL, mEmail);
         cv.put(COLUMN_NAME_PASSWORD, mPassword);
         cv.put(COLUMN_NAME_FIRSTNAME, mFirstName);
@@ -75,6 +97,6 @@ public class ITCMUser extends ITCMObject {
     public String getDeleteTableSQL() {
         return "DELETE FROM " + DBUtility.stringToSQLWrapper(TABLE_NAME) +
                 "where " + DBUtility.stringToSQLWrapper(COLUMN_NAME_ID) + " = " +
-                DBUtility.intToSQLWrapper(mId) + ";";
+                DBUtility.longToSQLWrapper(mId) + ";";
     }
 }
