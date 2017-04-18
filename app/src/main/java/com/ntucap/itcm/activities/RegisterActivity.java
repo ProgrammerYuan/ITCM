@@ -33,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity
     private static final String LOG_TAG = "RegisterActivity!";
 
     private TextView tv_signup_btn, tv_age_input, tv_gender_input;
-    private EditText et_email_input, et_password_input, et_password_comfirm_input,
+    private EditText et_email_input, et_password_input, et_password_confirm_input,
             et_firstname_input, et_lastname_input;
     private ImageView iv_back_btn,iv_mask;
     private PickerUI mPicker;
@@ -53,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity
         tv_signup_btn = (TextView) findViewById(R.id.tv_signup_confirm_act_register);
         et_email_input = (EditText) findViewById(R.id.et_email_input_act_register);
         et_password_input = (EditText) findViewById(R.id.et_pw_input_act_register);
-        et_password_comfirm_input = (EditText) findViewById(R.id.et_pw_confirm_input_act_register);
+        et_password_confirm_input = (EditText) findViewById(R.id.et_pw_confirm_input_act_register);
         et_firstname_input = (EditText) findViewById(R.id.et_firstname_input_act_register);
         et_lastname_input = (EditText) findViewById(R.id.et_lastname_input_act_register);
         tv_age_input = (TextView) findViewById(R.id.et_age_input_act_register);
@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity
         tv_age_input.setOnClickListener(this);
         new CountTextWatcher(et_email_input);
         new CountTextWatcher(et_password_input);
-        new CountTextWatcher(et_password_comfirm_input);
+        new CountTextWatcher(et_password_confirm_input);
         new CountTextWatcher(et_firstname_input);
         new CountTextWatcher(et_lastname_input);
         iv_mask.setOnTouchListener(this);
@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity
         }
 
         String password = et_password_input.getText().toString(),
-                passwordConfirm = et_password_comfirm_input.getText().toString();
+                passwordConfirm = et_password_confirm_input.getText().toString();
         if(password.length() == 0) {
             SuperToast.create(this, "Please input password", Style.DURATION_MEDIUM).show();
             return null;

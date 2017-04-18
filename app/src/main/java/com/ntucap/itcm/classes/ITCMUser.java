@@ -66,6 +66,10 @@ public class ITCMUser extends ITCMObject implements Serializable{
         mAge = Integer.parseInt(ValidationUtility.validateHashmapGet(paras, "age", "0"));
     }
 
+    public long getID() {
+        return mId;
+    }
+
     @Override
     public String getCreateTableSQL() {
         return "CREATE TABLE IF NOT EXISTS " + DBUtility.stringToSQLWrapper(TABLE_NAME) + "(" +
