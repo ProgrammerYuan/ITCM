@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backGround">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_roundedrect_solid_theme_20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:text="@string/str_build_pref"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/ll_air_temp_frag_pref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_air_temp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_air_temperature" />
+
+                <TextView
+                    android:id="@+id/tv_air_temp_frag_pref"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="25℃"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_rela_humid_frag_pref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_rela_humidity" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_relative_humidity" />
+
+                <TextView
+                    android:id="@+id/tv_humidity_frag_pref"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="50%"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/shape_roundedrect_solid_theme_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:text="@string/str_build_pref"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/ll_range_from_frag_pref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_range_from" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_range_from" />
+
+                <TextView
+                    android:id="@+id/tv_range_from_frag_pref"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="Slightly Warm"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_range_to_frag_pref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_range_to" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_range_to" />
+
+                <TextView
+                    android:id="@+id/tv_range_to_frag_pref"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="Slightly Cool"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/iv_mask_frag_pref"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@color/trans_50"
+        android:alpha="0.0"/>
+
+    <com.dpizarro.uipicker.library.picker.PickerUI
+        android:id="@+id/picker_ui_frag_pref"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundColor="@color/white"
+        app:linesCenterColor="@color/mainTheme"
+        app:autoDismiss="false"
+        app:itemsClickables="true"
+        app:textCenterColor="@color/textGray"
+        app:textNoCenterColor="@color/textLightGray"/>
+</RelativeLayout>

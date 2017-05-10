@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_gift"
+            android:src="@drawable/ic_pair_band"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tabs>
     <tab
-        id="@+id/tab_favorites"
-        icon="@drawable/ic_gift"
+        id="@+id/tab_dashboard"
+        icon="@drawable/ic_dashboard_black"
         title="@string/str_dashboard"/>
     <tab
-        id="@+id/tab_nearby"
-        icon="@drawable/ic_gift"
+        id="@+id/tab_preference"
+        icon="@drawable/ic_preference_black"
         title="@string/str_preference"/>
     <tab
-        id="@+id/tab_friends"
-        icon="@drawable/ic_gift"
+        id="@+id/tab_reward"
+        icon="@drawable/ic_reward_black"
         title="@string/str_reward"/>
     <tab
         id="@+id/tab_me"
-        icon="@drawable/ic_gift"
+        icon="@drawable/ic_me_black"
         title="@string/str_me"/>
 </tabs>

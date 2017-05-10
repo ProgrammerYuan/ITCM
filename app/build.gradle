@@ -30,5 +30,6 @@ dependencies {
     compile 'com.github.davidpizarro:pickerui:1.0.1'
     compile 'com.github.johnpersano:supertoasts:2.0'
     compile 'com.android.volley:volley:1.0.0'
+    compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
     testCompile 'junit:junit:4.12'
 }

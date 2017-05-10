@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundProgressDisplayView">
+        <attr name="text" format="string"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColor" format="color"/>
+        <attr name="imageSource" format="reference"/>
+        <attr name="contentSizeRatio" format="fraction"/>
+        <attr name="progressBarSizeRatio" format="fraction"/>
+        <attr name="progressBarProgress" format="float"/>
+        <attr name="progressBarStartAngle" format="float"/>
+        <attr name="progressBarSweepAngle" format="float"/>
+        <attr name="progressBarColor" format="color"/>
+        <attr name="progressBarBgColor" format="color"/>
+    </declare-styleable>
+</resources>

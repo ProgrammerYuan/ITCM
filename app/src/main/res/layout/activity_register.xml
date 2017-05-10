@@ -37,10 +37,7 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:textSize="16sp"
-            android:textColor="@color/textGray"
-            android:hint="@string/str_email_hint"
-            android:textColorHint="@color/textLightGray"
-            android:background="@color/trans"/>
+            android:hint="@string/str_email_hint"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -55,10 +52,7 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:textSize="16sp"
-            android:textColor="@color/textGray"
-            android:hint="@string/str_password_hint"
-            android:textColorHint="@color/textLightGray"
-            android:background="@color/trans"/>
+            android:hint="@string/str_password_hint"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -73,10 +67,7 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:textSize="16sp"
-            android:textColor="@color/textGray"
-            android:hint="@string/str_confirm_password_hint"
-            android:textColorHint="@color/textLightGray"
-            android:background="@color/trans"/>
+            android:hint="@string/str_confirm_password_hint"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -90,10 +81,7 @@
             android:layout_marginTop="16dp"
             android:maxLines="1"
             android:textSize="16sp"
-            android:textColor="@color/textGray"
-            android:hint="@string/str_firstname_hint"
-            android:textColorHint="@color/textLightGray"
-            android:background="@color/trans"/>
+            android:hint="@string/str_firstname_hint"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -107,10 +95,7 @@
             android:layout_marginTop="16dp"
             android:maxLines="1"
             android:textSize="16sp"
-            android:textColor="@color/textGray"
-            android:hint="@string/str_lastname_hint"
-            android:textColorHint="@color/textLightGray"
-            android:background="@color/trans"/>
+            android:hint="@string/str_lastname_hint"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -133,10 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@color/textGray"
-                    android:hint="@string/str_age_hint"
-                    android:textColorHint="@color/textLightGray"
-                    android:background="@color/trans"/>
+                    android:hint="@string/str_age_hint"/>
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -155,10 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@color/textGray"
-                    android:hint="@string/str_gender_hint"
-                    android:textColorHint="@color/textLightGray"
-                    android:background="@color/trans"/>
+                    android:hint="@string/str_gender_hint"/>
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

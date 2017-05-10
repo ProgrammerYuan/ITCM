@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">ITCM</string>
+
+    <!--Login/Register Activities-->
     <string name="str_logo_title">NTU  -  iTCM</string>
     <string name="str_sign_up_cap">SIGN UP</string>
     <string name="str_login_cap">LOGIN</string>
@@ -17,4 +19,67 @@
     <string name="str_age_format">Age: %d</string>
     <string name="str_gender_format">Gender: %s</string>
     <string name="str_forgot_password">Forgor Password?</string>
+
+    <!--Fragment Environment-->
+    <string name="str_building_status">Building Status</string>
+    <string name="str_air_temp">Air Temp\n</string>
+    <string name="str_humidity">Humidity\n</string>
+    <string name="str_uv_level">UV Level\n</string>
+    <string name="str_air_pressure">Air Pressure\n</string>
+    <string name="str_heart_rate">Heart Rate\n</string>
+    <string name="str_skin_temp">Skin Temp\n</string>
+    <string name="str_distance">Distance\n</string>
+    <string name="str_calories">Calories\n</string>
+
+    <!--Fragment Preferences-->
+    <string name="str_build_pref">Building Preferences</string>
+    <string name="str_air_temperature">Air Temperatures</string>
+    <string name="str_relative_humidity">Relative Humidity</string>
+    <string name="str_range_from">Range From</string>
+    <string name="str_range_to">Range To</string>
+    <string name="str_percentage_format">%d%</string>
+    <string name="str_temperature_format">%d℃</string>
+    <string-array name="str_array_air_temp">
+        <item>18℃</item>
+        <item>19℃</item>
+        <item>20℃</item>
+        <item>21℃</item>
+        <item>22℃</item>
+        <item>23℃</item>
+        <item>24℃</item>
+        <item>25℃</item>
+        <item>26℃</item>
+        <item>27℃</item>
+        <item>28℃</item>
+        <item>29℃</item>
+        <item>30℃</item>
+        <item>31℃</item>
+        <item>32℃</item>
+        <item>33℃</item>
+        <item>34℃</item>
+        <item>35℃</item>
+    </string-array>
+    <string-array name="str_array_humidity">
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+    </string-array>
+    <string-array name="str_array_hotness">
+        <item>Hot</item>
+        <item>Warm</item>
+        <item>Slightly Warm</item>
+        <item>Comfortable</item>
+    </string-array>
+    <string-array name="str_array_coldness">
+        <item>Comfortable</item>
+        <item>Slightly Cool</item>
+        <item>Cool</item>
+        <item>Cold</item>
+    </string-array>
+
 </resources>

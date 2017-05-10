@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.gigamole.library.ArcProgressStackView
+        android:id="@+id/apsv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:apsv_rounded="true"
+        app:apsv_animated="true"
+        app:apsv_text_color="#fff"
+        app:apsv_animation_duration="1000"
+        app:apsv_interpolator="@android:anim/bounce_interpolator"
+        app:apsv_draw_width="15%"
+        app:apsv_model_offset="0dp"
+        app:apsv_model_bg_enabled="true"
+        app:apsv_start_angle="90"
+        app:apsv_sweep_angle="360"
+        app:apsv_indicator_orientation="vertical"/>
+
+    <TextView
+        android:id="@+id/tv_indicator_progressview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:id="@+id/iv_icon_progressview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleType="centerInside"/>
+
+</RelativeLayout>

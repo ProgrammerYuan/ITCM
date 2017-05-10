@@ -2,7 +2,19 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
+        <item name="android:textViewStyle">@style/ITCMTextViewStyle</item>
+        <item name="editTextStyle">@style/ITCMEditTextViewStyle</item>
     </style>
 
+    <style name="ITCMTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/textGray</item>
+        <item name="android:background">@color/trans</item>
+        <item name="android:textColorHint">@color/textLightGray</item>
+    </style>
+
+    <style name="ITCMEditTextViewStyle" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/textGray</item>
+        <item name="android:background">@color/trans</item>
+        <item name="android:textColorHint">@color/textLightGray</item>
+    </style>
 </resources>
