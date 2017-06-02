@@ -24,12 +24,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
+    compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.alibaba:fastjson:1.2.9'
     compile 'com.roughike:bottom-bar:2.2.0'
     compile 'com.github.davidpizarro:pickerui:1.0.1'
     compile 'com.github.johnpersano:supertoasts:2.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
+    compile 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
     testCompile 'junit:junit:4.12'
 }

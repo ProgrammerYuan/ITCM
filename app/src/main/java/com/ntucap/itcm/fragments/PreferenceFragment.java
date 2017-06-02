@@ -67,6 +67,7 @@ public class PreferenceFragment extends ITCMFragment
         super.onCreateView(inflater, container, savedInstanceState,
                 R.layout.fragment_preference);
         if(!mInitialized) {
+            mInitialized = true;
             mPicker = (PickerUI) mInflatedView.findViewById(R.id.picker_ui_frag_pref);
             mMask = (ImageView) mInflatedView.findViewById(R.id.iv_mask_frag_pref);
             mAirTempText = (TextView) mInflatedView.findViewById(R.id.tv_air_temp_frag_pref);
@@ -151,12 +152,32 @@ public class PreferenceFragment extends ITCMFragment
     public void onItemClickPickerUI(int which, int position, String valueResult) {
         switch (mCurrentPickerIndex) {
             case 0:
+                if (mAirTempSlideNumber == position) {
+                    mAirTempText.setText(valueResult);
+                } else {
+                    mAirTempSlideNumber = position;
+                }
                 break;
             case 1:
+                if (mHumiditySlideNumber == position) {
+                    mHumidityText.setText(valueResult);
+                } else {
+                    mHumiditySlideNumber = position;
+                }
                 break;
             case 2:
+                if (mRangeFromSlideNumber == position) {
+                    mRangeFromText.setText(valueResult);
+                } else {
+                    mRangeFromSlideNumber = position;
+                }
                 break;
             case 3:
+                if (mRangeToSlideNumber == position) {
+                    mRangeToText.setText(valueResult);
+                } else {
+                    mRangeToSlideNumber = position;
+                }
                 break;
         }
     }

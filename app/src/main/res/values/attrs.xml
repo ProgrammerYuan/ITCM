@@ -13,4 +13,13 @@
         <attr name="progressBarColor" format="color"/>
         <attr name="progressBarBgColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="IrisSwitchButton">
+        <attr name="background" format="reference"/>
+        <attr name="chosenMaskBackground" format="reference|color"/>
+        <attr name="chosenTextColor" format="color"/>
+        <attr name="notChosenTextColor" format="color"/>
+        <attr name="itemCount" format="integer"/>
+        <attr name="initChosenItemIndex" format="integer"/>
+    </declare-styleable>
 </resources>

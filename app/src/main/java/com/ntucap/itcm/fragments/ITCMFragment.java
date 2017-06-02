@@ -47,7 +47,6 @@ public class ITCMFragment extends Fragment {
                              @Nullable Bundle savedInstanceState, int resourceId) {
         if(mInflatedView == null) {
             mInflatedView = layoutInflater.inflate(resourceId, null);
-            mInitialized = true;
         }
 
         ViewParent parentView = mInflatedView.getParent();

@@ -10,6 +10,7 @@ import com.ntucap.itcm.R;
 import com.ntucap.itcm.fragments.EnvironmentalFragment;
 import com.ntucap.itcm.fragments.ITCMFragment;
 import com.ntucap.itcm.fragments.PreferenceFragment;
+import com.ntucap.itcm.fragments.RewardsFragment;
 import com.ntucap.itcm.utils.adapters.PagerFragmentAdapter;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         mFragments = new ArrayList<>();
         mFragments.add(new EnvironmentalFragment());
         mFragments.add(new PreferenceFragment());
-        mFragments.add(new EnvironmentalFragment());
+        mFragments.add(new RewardsFragment());
         mFragments.add(new EnvironmentalFragment());
         mAdapter = new PagerFragmentAdapter(getSupportFragmentManager(), mFragments);
         mViewpager.setAdapter(mAdapter);

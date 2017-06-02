@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backGround"
+    android:gravity="center_horizontal">
+
+    <com.ntucap.itcm.views.IrisSwitchButton
+        android:id="@+id/sw_panel_frag_rewards"
+        android:layout_width="140dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="12dp"
+        app:itemCount="2" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_rewards_frag_rewards"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:elevation="4dp">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
