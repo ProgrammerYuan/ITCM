@@ -83,7 +83,10 @@ public class RoundProgressDisplayView extends RelativeLayout {
             mArcProgressBar.setStartAngle(mProgressBarStartAngle);
             mArcProgressBar.setSweepAngle(mProgressBarSweepAngle);
             mArcProgressBar.setDrawWidthFraction(mProgressBarSizeRatio);
+            mArcProgressBar.setIsAnimated(true);
             mArcProgressBar.setIsShadowed(false);
+            models.add(new ArcProgressStackView.Model("", mProgressPercentage, mProgressBarBgColor, mProgressBarColor));
+            mArcProgressBar.setModels(models);
             setProgress(mProgressPercentage);
 
             //Content Part Initialization
@@ -111,6 +114,15 @@ public class RoundProgressDisplayView extends RelativeLayout {
         }
     }
 
+    public void setText(String text) {
+        if (mContentDisplayState == STATE_SHOW_TEXTVIEW) mTextView.setText(text);
+    }
+
+    public void setValues(String text, float progress) {
+        setText(text);
+        setProgress(progress);
+    }
+
     public void setProgress(@FloatRange(from = 0.0, to = 100.0) float progress) {
         setProgress(progress, mProgressBarBgColor, mProgressBarColor);
     }
@@ -120,13 +132,10 @@ public class RoundProgressDisplayView extends RelativeLayout {
         mProgressBarColor = barColor;
         mProgressPercentage = progress;
         mProgressBarBgColor = barBgColor;
-        models.clear();
-        models.add(new ArcProgressStackView.Model("", mProgressPercentage,
-                mProgressBarBgColor,
-                mProgressBarColor));
-        mTextView.setText(String.valueOf(progress));
-        mArcProgressBar.setModels(models);
+        mArcProgressBar.getModels().get(0).setProgress(progress);
         mArcProgressBar.animateProgress();
+        mArcProgressBar.postInvalidate();
+//        mArcProgressBar.animateProgress();
     }
 
     public void setSweepAngle(@FloatRange(from = 0.0, to = 360.0) float sweepAngle) {
@@ -145,6 +154,9 @@ public class RoundProgressDisplayView extends RelativeLayout {
         int widthMeasureSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightMeasureMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightMeasureSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (widthMeasureSize == 0) widthMeasureSize = getMeasuredWidth();
+        if (heightMeasureSize == 0) heightMeasureSize = getMeasuredHeight();
 
         int consistentSize = (widthMeasureSize == 0 || heightMeasureSize == 0) ?
                 Math.max(widthMeasureSize, heightMeasureSize):

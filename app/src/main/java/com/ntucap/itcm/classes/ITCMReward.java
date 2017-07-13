@@ -2,6 +2,8 @@ package com.ntucap.itcm.classes;
 
 import android.content.ContentValues;
 
+import com.ntucap.itcm.utils.DataUtil;
+
 /**
  * Created by ProgrammerYuan on 28/05/17.
  */
@@ -19,6 +21,15 @@ public class ITCMReward extends ITCMObject {
 
     public ITCMReward(int type) {
         this(type, 0, 0, "", "");
+    }
+
+    public ITCMReward(int type, int sectionIndex, int itemIndex) {
+        mType = type;
+        mQty = 1;
+        mValue = 10;
+        mDate = (DataUtil.getMonthDaysNum(2016, sectionIndex % 12) - itemIndex) + " " +
+                        DataUtil.getMonthAcronym(11 - sectionIndex % 12);
+        mRemark = "Whatever Rewards~";
     }
 
     public ITCMReward(int type, int qty, int value, String date, String remark) {

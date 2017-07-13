@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMReward;
+import com.ntucap.itcm.utils.DataUtil;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
 
@@ -28,13 +29,13 @@ public class RewardHistoryAdapter extends SectioningAdapter {
         private String title;
         private ArrayList<ITCMReward> rewards;
 
-        public Section(int type, String title) {
+        public Section(int type, int sectionIndex, String title) {
             this.type = type;
-            this.title = title;
+            this.title = DataUtil.getMonth(11 - sectionIndex) + " 2016";
             rewards = new ArrayList<>();
             if(type == 0)
                 for(int i = 0; i < 30; i ++)
-                    rewards.add(new ITCMReward(i % 2));
+                    rewards.add(new ITCMReward(i % 2, sectionIndex, i));
         }
 
         public String getTitle() {
@@ -57,7 +58,7 @@ public class RewardHistoryAdapter extends SectioningAdapter {
 
         public ITCMHeaderViewHolder(View headerView) {
             super(headerView);
-
+            mTvTitle = (TextView) headerView.findViewById(R.id.tv_title_item_header);
         }
     }
 
@@ -107,7 +108,7 @@ public class RewardHistoryAdapter extends SectioningAdapter {
         mContext = context;
         mSections = new ArrayList<>();
         for(int i = 0; i < numSections * 2; i ++) {
-            mSections.add(new Section(i % 2, "test"));
+            mSections.add(new Section(i % 2, i / 2, DataUtil.getMonth(11 - i / 2)));
         }
     }
 
@@ -176,6 +177,9 @@ public class RewardHistoryAdapter extends SectioningAdapter {
 
     @Override
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
-        return;
+        if(sectionIndex % 2 == 0) {
+            ITCMHeaderViewHolder itemHeaderViewHolder = (ITCMHeaderViewHolder) viewHolder;
+            itemHeaderViewHolder.mTvTitle.setText(mSections.get(sectionIndex).getTitle());
+        }
     }
 }

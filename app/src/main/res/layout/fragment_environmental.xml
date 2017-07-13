@@ -34,6 +34,7 @@
                     android:orientation="horizontal">
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_airtemp_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
@@ -41,10 +42,11 @@
                         app:text="22" />
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_humidity_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
-                        android:layout_weight="1"
                         android:layout_marginStart="24dp"
+                        android:layout_weight="1"
                         app:progressBarProgress="60"
                         app:text="56" />
                 </LinearLayout>
@@ -55,6 +57,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_airtemp_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -62,6 +65,7 @@
                         android:text="Air Temp\n℃" />
 
                     <TextView
+                        android:id="@+id/tv_humidity_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -78,6 +82,7 @@
                     android:orientation="horizontal">
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_uv_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
@@ -85,6 +90,7 @@
                         app:progressBarProgress="100" />
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_airpress_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
@@ -99,6 +105,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_uv_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -106,6 +113,7 @@
                         android:text="UV Level\nN/A" />
 
                     <TextView
+                        android:id="@+id/tv_airpressure_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -154,12 +162,14 @@
                     android:orientation="horizontal">
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_heartrate_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
                         app:text="0" />
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_skintemp_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
@@ -173,6 +183,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_heartrate_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -180,6 +191,7 @@
                         android:text="Heart Rate\nbpm" />
 
                     <TextView
+                        android:id="@+id/tv_skintemp_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -196,12 +208,14 @@
                     android:orientation="horizontal">
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_distance_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
                         app:imageSource="@drawable/ic_distance" />
 
                     <com.ntucap.itcm.views.RoundProgressDisplayView
+                        android:id="@+id/progressbar_calories_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
                         android:layout_weight="1"
@@ -215,6 +229,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_distance_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -222,6 +237,7 @@
                         android:text="Distance\n0 m" />
 
                     <TextView
+                        android:id="@+id/tv_calories_frag_env"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"

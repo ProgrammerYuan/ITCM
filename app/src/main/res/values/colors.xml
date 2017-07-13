@@ -12,6 +12,7 @@
     <color name = "trans_white_25">#3FFFFFFF</color>
     <color name = "trans_white_12">#1FFFFFFF</color>
     <color name = "white">#FFFFFF</color>
+    <color name = "red">#FF0000</color>
     <!--customized colors section-->
     <color name = "textGray">#4D4D4D</color>
     <color name = "textLightGray">#D4D4D4</color>

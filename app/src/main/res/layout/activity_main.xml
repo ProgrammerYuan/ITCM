@@ -18,11 +18,13 @@
         android:elevation="4dp">
 
         <TextView
+            android:id="@+id/tv_title_act_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/textGray"
-            android:text="@string/str_dashboard"/>
+            android:text="@string/str_dashboard"
+            android:textSize="16sp"/>
 
         <ImageView
             android:layout_width="24dp"
@@ -47,4 +49,24 @@
         app:bb_tabXmlResource="@xml/bottombar_tabs"
         app:bb_inActiveTabColor="@color/textGray"
         app:bb_activeTabColor="@color/mainTheme"/>
+
+    <ImageView
+        android:id="@+id/iv_mask_act_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        android:src="@color/trans_50"
+        android:alpha="0.0"/>
+
+    <com.dpizarro.uipicker.library.picker.PickerUI
+        android:id="@+id/picker_ui_act_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="16dp"
+        app:backgroundColor="@color/white"
+        app:linesCenterColor="@color/mainTheme"
+        app:autoDismiss="false"
+        app:itemsClickables="true"
+        app:textCenterColor="@color/textGray"
+        app:textNoCenterColor="@color/textLightGray"/>
 </RelativeLayout>

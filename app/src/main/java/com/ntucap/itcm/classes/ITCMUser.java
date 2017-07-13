@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ntucap.itcm.utils.DBUtility;
+import com.ntucap.itcm.utils.DBUtil;
 import com.ntucap.itcm.utils.ValidationUtility;
 
 import java.io.Serializable;
@@ -70,17 +70,30 @@ public class ITCMUser extends ITCMObject implements Serializable{
         return mId;
     }
 
+    public HashMap<String, String> getData() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("email", this.mEmail);
+        data.put("password", this.mPassword);
+        data.put("firstname", this.mFirstName);
+        data.put("lastname", this.mLastName);
+        data.put("age", String.valueOf(this.mAge));
+        data.put("gender", this.mGender);
+        data.put("weight", String.valueOf(70));
+        data.put("height", String.valueOf(183));
+        return data;
+    }
+
     @Override
     public String getCreateTableSQL() {
-        return "CREATE TABLE IF NOT EXISTS " + DBUtility.stringToSQLWrapper(TABLE_NAME) + "(" +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_ID) + DBUtility.SQL_INTEGER_PRIMARY_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_EMAIL) + DBUtility.SQL_VARCHAR255_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_PASSWORD) + DBUtility.SQL_VARCHAR255_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_FIRSTNAME) + DBUtility.SQL_VARCHAR255_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_LASTNAME) + DBUtility.SQL_VARCHAR255_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_AGE) + DBUtility.SQL_INTEGER_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_GENDER) + DBUtility.SQL_INTEGER_TYPE +
-                DBUtility.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtility.SQL_TINYINT_TYPE +
+        return "CREATE TABLE IF NOT EXISTS " + DBUtil.stringToSQLWrapper(TABLE_NAME) + "(" +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_ID) + DBUtil.SQL_INTEGER_PRIMARY_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_EMAIL) + DBUtil.SQL_VARCHAR255_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_PASSWORD) + DBUtil.SQL_VARCHAR255_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_FIRSTNAME) + DBUtil.SQL_VARCHAR255_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_LASTNAME) + DBUtil.SQL_VARCHAR255_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_AGE) + DBUtil.SQL_INTEGER_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_GENDER) + DBUtil.SQL_INTEGER_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtil.SQL_TINYINT_TYPE +
                 ");";
     }
 
@@ -99,8 +112,8 @@ public class ITCMUser extends ITCMObject implements Serializable{
 
     @Override
     public String getDeleteTableSQL() {
-        return "DELETE FROM " + DBUtility.stringToSQLWrapper(TABLE_NAME) +
-                "where " + DBUtility.stringToSQLWrapper(COLUMN_NAME_ID) + " = " +
-                DBUtility.longToSQLWrapper(mId) + ";";
+        return "DELETE FROM " + DBUtil.stringToSQLWrapper(TABLE_NAME) +
+                "where " + DBUtil.stringToSQLWrapper(COLUMN_NAME_ID) + " = " +
+                DBUtil.longToSQLWrapper(mId) + ";";
     }
 }

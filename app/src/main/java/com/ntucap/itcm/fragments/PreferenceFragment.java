@@ -3,6 +3,7 @@ package com.ntucap.itcm.fragments;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,13 @@ import android.widget.TextView;
 
 import com.dpizarro.uipicker.library.picker.PickerUI;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.events.PickerHideEvent;
+import com.ntucap.itcm.classes.events.PickerShowEvent;
+import com.ntucap.itcm.utils.EventUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,18 +31,14 @@ import java.util.Collections;
  */
 
 public class PreferenceFragment extends ITCMFragment
-        implements View.OnClickListener, View.OnTouchListener,PickerUI.PickerUIItemClickListener{
+        implements View.OnClickListener, PickerUI.PickerUIItemClickListener{
 
-    private PickerUI mPicker;
-    private ImageView mMask;
     private TextView mAirTempText, mHumidityText, mRangeFromText, mRangeToText;
     private LinearLayout mAirTempBtn, mHumidityBtn,mRangeFromBtn, mRangeToBtn;
     private ArrayList<String> mAirTempArray, mHumidityArray, mRangeFromArray, mRangeToArray;
 
     private int mCurrentPickerIndex = -1;
     private int mAirTempSlideNumber, mHumiditySlideNumber, mRangeFromSlideNumber, mRangeToSlideNumber;
-
-    private static final int ALPHA_ANIM_DURATION = 400;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,14 +66,24 @@ public class PreferenceFragment extends ITCMFragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
         super.onCreateView(inflater, container, savedInstanceState,
                 R.layout.fragment_preference);
         if(!mInitialized) {
             mInitialized = true;
-            mPicker = (PickerUI) mInflatedView.findViewById(R.id.picker_ui_frag_pref);
-            mMask = (ImageView) mInflatedView.findViewById(R.id.iv_mask_frag_pref);
             mAirTempText = (TextView) mInflatedView.findViewById(R.id.tv_air_temp_frag_pref);
             mHumidityText = (TextView) mInflatedView.findViewById(R.id.tv_humidity_frag_pref);
             mRangeFromText = (TextView) mInflatedView.findViewById(R.id.tv_range_from_frag_pref);
@@ -88,24 +102,24 @@ public class PreferenceFragment extends ITCMFragment
         mHumidityBtn.setOnClickListener(this);
         mRangeFromBtn.setOnClickListener(this);
         mRangeToBtn.setOnClickListener(this);
-        mPicker.setOnClickItemPickerUIListener(this);
     }
 
-    private void controlMask(boolean show, int duration) {
-        ObjectAnimator animator;
-        if(show) {
-            animator = ObjectAnimator.ofFloat(mMask, "alpha", 0.0f, 1.0f);
-        } else {
-            animator = ObjectAnimator.ofFloat(mMask, "alpha", 1.0f, 0.0f);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(PickerHideEvent event) {
+        switch (event.getEventId()) {
+            case EventUtil.EVENT_ID_AIRTEMP_FRAG_PREF:
+                mAirTempText.setText(event.getResponse());
+                break;
+            case EventUtil.EVENT_ID_HUMID_FRAG_PREF:
+                mHumidityText.setText(event.getResponse());
+                break;
+            case EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF:
+                mRangeFromText.setText(event.getResponse());
+                break;
+            case EventUtil.EVENT_ID_RANGE_TO_FRAG_PREF:
+                mRangeToText.setText(event.getResponse());
+                break;
         }
-        animator.setDuration(duration);
-        animator.start();
-    }
-
-    private void controlPicker(boolean show, int slideNumber) {
-        controlMask(show, ALPHA_ANIM_DURATION);
-        if(show) mPicker.slide(slideNumber);
-        else mPicker.slide();
     }
 
     @Override
@@ -113,39 +127,29 @@ public class PreferenceFragment extends ITCMFragment
         int id = v.getId();
         switch (id) {
             case R.id.ll_air_temp_frag_pref:
-                mCurrentPickerIndex = 0;
-                mPicker.setItems(mContext, mAirTempArray);
-                controlPicker(true, mAirTempSlideNumber);
+                EventBus.getDefault().post(
+                        new PickerShowEvent(EventUtil.EVENT_ID_AIRTEMP_FRAG_PREF, R.array.str_array_air_temp)
+                );
                 break;
             case R.id.ll_rela_humid_frag_pref:
-                mCurrentPickerIndex = 1;
-                mPicker.setItems(mContext, mHumidityArray);
-                controlPicker(true, mHumiditySlideNumber);
+                EventBus.getDefault().post(
+                        new PickerShowEvent(EventUtil.EVENT_ID_HUMID_FRAG_PREF, R.array.str_array_humidity)
+                );
                 break;
             case R.id.ll_range_from_frag_pref:
-                mCurrentPickerIndex = 2;
-                mPicker.setItems(mContext, mRangeFromArray);
-                controlPicker(true, mRangeFromSlideNumber);
+                EventBus.getDefault().post(
+                        new PickerShowEvent(EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF, R.array.str_array_hotness)
+                );
                 break;
             case R.id.ll_range_to_frag_pref:
-                mCurrentPickerIndex = 3;
-                mPicker.setItems(mContext, mRangeToArray);
-                controlPicker(true, mRangeToSlideNumber);
+                EventBus.getDefault().post(
+                        new PickerShowEvent(EventUtil.EVENT_ID_RANGE_TO_FRAG_PREF, R.array.str_array_coldness)
+                );
                 break;
             default:
                 break;
         }
 
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.iv_mask_frag_pref:
-                return mPicker.isPanelShown();
-        }
-        return false;
     }
 
     @Override

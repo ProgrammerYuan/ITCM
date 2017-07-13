@@ -7,6 +7,7 @@
     </style>
 
     <style name="ITCMTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/textGray</item>
         <item name="android:background">@color/trans</item>
         <item name="android:textColorHint">@color/textLightGray</item>

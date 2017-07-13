@@ -1,12 +1,51 @@
 package com.ntucap.itcm.fragments;
 
+import android.app.Activity;
+import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.microsoft.band.BandClient;
+import com.microsoft.band.BandClientManager;
+import com.microsoft.band.BandException;
+import com.microsoft.band.BandIOException;
+import com.microsoft.band.BandInfo;
+import com.microsoft.band.ConnectionState;
+import com.microsoft.band.InvalidBandVersionException;
+import com.microsoft.band.UserConsent;
+import com.microsoft.band.sensors.BandBarometerEvent;
+import com.microsoft.band.sensors.BandBarometerEventListener;
+import com.microsoft.band.sensors.BandCaloriesEvent;
+import com.microsoft.band.sensors.BandCaloriesEventListener;
+import com.microsoft.band.sensors.BandDistanceEvent;
+import com.microsoft.band.sensors.BandDistanceEventListener;
+import com.microsoft.band.sensors.BandHeartRateEvent;
+import com.microsoft.band.sensors.BandHeartRateEventListener;
+import com.microsoft.band.sensors.BandSkinTemperatureEvent;
+import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
+import com.microsoft.band.sensors.BandUVEvent;
+import com.microsoft.band.sensors.BandUVEventListener;
+import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.events.BandConnectEvent;
+import com.ntucap.itcm.classes.events.PickerShowEvent;
+import com.ntucap.itcm.views.RoundProgressDisplayView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
+
+import javax.xml.transform.Result;
 
 /**
  * Created by ProgrammerYuan on 18/04/17.
@@ -14,12 +53,299 @@ import com.ntucap.itcm.R;
 
 public class EnvironmentalFragment extends ITCMFragment {
 
+    private BandClient client = null;
+    private TextView mTvHeartRate, mTvCalories, mTvUVLevel, mTvSkinTemp, mTvDistance, mTvAirTemp,
+            mTvHumidity, mTvAirPressure;
+    private RoundProgressDisplayView mHeartRateView, mCaloriesView, mUVLevelView, mSkinTempView,
+            mDistanceView, mAirTempView, mHumidityView, mAirPressView;
+
+    private String TEMPLATE_HEARTRATE;
+    private String TEMPLATE_CALORIES;
+    private String TEMPLATE_UV_LEVEL;
+    private String TEMPLATE_SKIN_TEMPERATURE;
+    private String TEMPLATE_DISTANCE;
+    private String TEMPLATE_AIR_TEMPERATURE;
+    private String TEMPLATE_HUMIDITY;
+    private String TEMPLATE_AIR_PRESSURE;
+
+    private static final float MAX_HUMIDITY_VALUE = 90;
+    private static final float MAX_HEARTRATE_VALUE = 180;
+    private static final float MAX_AIR_TEMPERATURE_VALUE = 45;
+    private static final float MAX_SKIN_TEMPERATURE_VALUE = 45;
+
+    private BandHeartRateEventListener mHeartRateListener = new BandHeartRateEventListener() {
+        @Override
+        public void onBandHeartRateChanged(final BandHeartRateEvent event) {
+            if (event != null && mInitialized) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvHeartRate.setText(String.format(TEMPLATE_HEARTRATE, event.getHeartRate()));
+                        mHeartRateView.setValues(
+                                String.valueOf(event.getHeartRate()),
+                                event.getHeartRate() * 100f / MAX_HEARTRATE_VALUE
+                        );
+                    }
+                });
+            }
+        }
+    };
+
+    private BandCaloriesEventListener mCaloriesListener = new BandCaloriesEventListener() {
+        @Override
+        public void onBandCaloriesChanged(final BandCaloriesEvent event) {
+            if (event != null && mInitialized) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            mTvCalories.setText(String.format(TEMPLATE_CALORIES, event.getCaloriesToday()));
+                        } catch (InvalidBandVersionException e) {
+                            mTvCalories.setText("Not Supported");
+                        }
+                    }
+                });
+            }
+        }
+    };
+
+    private BandUVEventListener mUVListener = new BandUVEventListener() {
+        @Override
+        public void onBandUVChanged(final BandUVEvent event) {
+            if (event != null && mInitialized) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvUVLevel.setText(String.format(TEMPLATE_UV_LEVEL, event.getUVIndexLevel()));
+                    }
+                });
+            }
+        }
+    };
+
+    private BandSkinTemperatureEventListener mSkinTemperatureListener
+            = new BandSkinTemperatureEventListener() {
+        @Override
+        public void onBandSkinTemperatureChanged(final BandSkinTemperatureEvent event) {
+            if (event != null && mInitialized) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvSkinTemp.setText(String.format(TEMPLATE_SKIN_TEMPERATURE, event.getTemperature()));
+                        mSkinTempView.setValues(
+                                String.valueOf(event.getTemperature()),
+                                event.getTemperature() * 100f / MAX_SKIN_TEMPERATURE_VALUE
+                        );
+                    }
+                });
+            }
+        }
+    };
+
+    private BandDistanceEventListener mDistanceListener = new BandDistanceEventListener() {
+        @Override
+        public void onBandDistanceChanged(final BandDistanceEvent event) {
+            if (event != null && mInitialized) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            mTvDistance.setText(String.format(TEMPLATE_DISTANCE, event.getDistanceToday() / 100));
+                        } catch (InvalidBandVersionException e) {
+                            mTvDistance.setText(String.format(TEMPLATE_DISTANCE, 0));
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }
+    };
+
+    private BandBarometerEventListener mBarometerListener = new BandBarometerEventListener() {
+        @Override
+        public void onBandBarometerChanged(final BandBarometerEvent event) {
+            if (event != null && mInitialized) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("BAND_LOG: ", String.valueOf(event.getAirPressure()));
+                        mTvAirPressure.setText(String.format(TEMPLATE_AIR_PRESSURE, event.getAirPressure()));
+                        mTvAirTemp.setText(String.format(TEMPLATE_AIR_TEMPERATURE, event.getTemperature()));
+                        mAirTempView.setValues(
+                                String.valueOf(event.getTemperature()),
+                                (float) event.getTemperature() * 100f / MAX_AIR_TEMPERATURE_VALUE
+                        );
+                    }
+                });
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState){
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState,
                 R.layout.fragment_environmental);
 
+        if (!mInitialized) {
+            mTvAirTemp = (TextView) mInflatedView.findViewById(R.id.tv_airtemp_frag_env);
+            mTvCalories = (TextView) mInflatedView.findViewById(R.id.tv_calories_frag_env);
+            mTvDistance = (TextView) mInflatedView.findViewById(R.id.tv_distance_frag_env);
+            mTvHeartRate = (TextView) mInflatedView.findViewById(R.id.tv_heartrate_frag_env);
+            mTvSkinTemp = (TextView) mInflatedView.findViewById(R.id.tv_skintemp_frag_env);
+            mTvUVLevel = (TextView) mInflatedView.findViewById(R.id.tv_uv_frag_env);
+            mTvHumidity = (TextView) mInflatedView.findViewById(R.id.tv_humidity_frag_env);
+            mTvAirPressure = (TextView) mInflatedView.findViewById(R.id.tv_airpressure_frag_env);
+
+            mAirTempView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_airtemp_frag_env);
+            mCaloriesView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_calories_frag_env);
+            mDistanceView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_distance_frag_env);
+            mHeartRateView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_heartrate_frag_env);
+            mSkinTempView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_skintemp_frag_env);
+            mUVLevelView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_uv_frag_env);
+            mHumidityView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_humidity_frag_env);
+            mAirPressView = (RoundProgressDisplayView)
+                    mInflatedView.findViewById(R.id.progressbar_airpress_frag_env);
+
+            mAirPressView.setProgress(100f);
+            mDistanceView.setProgress(100f);
+            mCaloriesView.setProgress(100f);
+            mUVLevelView.setProgress(100f);
+
+            Resources resources = mContext.getResources();
+
+            TEMPLATE_AIR_TEMPERATURE = resources.getString(R.string.str_air_temp_template);
+            TEMPLATE_CALORIES = resources.getString(R.string.str_calories_template);
+            TEMPLATE_DISTANCE = resources.getString(R.string.str_distance_template);
+            TEMPLATE_HEARTRATE = resources.getString(R.string.str_heart_rate_template);
+            TEMPLATE_SKIN_TEMPERATURE = resources.getString(R.string.str_skin_temp_template);
+            TEMPLATE_UV_LEVEL = resources.getString(R.string.str_uv_level_template);
+            TEMPLATE_HUMIDITY = resources.getString(R.string.str_humidity_template);
+            TEMPLATE_AIR_PRESSURE = resources.getString(R.string.str_air_pressure_template);
+
+            mInitialized = true;
+        }
         return mInflatedView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        final WeakReference<Activity> reference = new WeakReference<>((Activity) mContext);
+        new HeartRateConsentTask().execute(reference);
+
+    }
+
+    private class DataSubscriptionTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                if (getConnectedBandClient()) {
+                    if (client.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED) {
+                        client.getSensorManager().registerHeartRateEventListener(mHeartRateListener);
+                    } else {
+                        appendToUI("You have not given this application consent to access heart rate data yet."
+                                + " Please press the Heart Rate Consent button.\n");
+                    }
+                    client.getSensorManager().registerBarometerEventListener(mBarometerListener);
+                    client.getSensorManager().registerCaloriesEventListener(mCaloriesListener);
+                    client.getSensorManager().registerDistanceEventListener(mDistanceListener);
+                    client.getSensorManager().registerSkinTemperatureEventListener(mSkinTemperatureListener);
+                    client.getSensorManager().registerUVEventListener(mUVListener);
+                } else {
+                    appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
+                }
+            } catch (BandException e) {
+                String exceptionMessage = "";
+                switch (e.getErrorType()) {
+                    case UNSUPPORTED_SDK_VERSION_ERROR:
+                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.\n";
+                        break;
+                    case SERVICE_ERROR:
+                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.\n";
+                        break;
+                    default:
+                        exceptionMessage = "Unknown error occured: " + e.getMessage() + "\n";
+                        break;
+                }
+                appendToUI(exceptionMessage);
+
+            } catch (Exception e) {
+                appendToUI(e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    private class HeartRateConsentTask extends AsyncTask<WeakReference<Activity>, Void, Boolean> {
+
+        private boolean mConsentGiven;
+
+
+        @Override
+        protected Boolean doInBackground(WeakReference<Activity>... params) {
+            try {
+                if (getConnectedBandClient()) {
+                    if (params[0].get() != null) {
+                        client.getSensorManager().requestHeartRateConsent(params[0].get(), new HeartRateConsentListener() {
+                            @Override
+                            public void userAccepted(boolean consentGiven) {
+                                new DataSubscriptionTask().execute();
+                            }
+                        });
+                    }
+                    return true;
+                } else {
+                    appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
+                }
+            } catch (BandException e) {
+                String exceptionMessage = "";
+                switch (e.getErrorType()) {
+                    case UNSUPPORTED_SDK_VERSION_ERROR:
+                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.\n";
+                        break;
+                    case SERVICE_ERROR:
+                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.\n";
+                        break;
+                    default:
+                        exceptionMessage = "Unknown error occured: " + e.getMessage() + "\n";
+                        break;
+                }
+                appendToUI(exceptionMessage);
+
+            } catch (Exception e) {
+                appendToUI(e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    private void appendToUI(String msg) {
+        Log.d("BAND LOG:", msg);
+    }
+
+    private boolean getConnectedBandClient() throws InterruptedException, BandException {
+        if (client == null) {
+            BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
+            if (devices.length == 0) {
+                appendToUI("Band isn't paired with your phone.\n");
+
+                return false;
+            }
+            client = BandClientManager.getInstance().create(getActivity(), devices[0]);
+        } else if (ConnectionState.CONNECTED == client.getConnectionState()) {
+            return true;
+        }
+
+        appendToUI("Band is connecting...\n");
+        return ConnectionState.CONNECTED == client.connect().await();
     }
 }

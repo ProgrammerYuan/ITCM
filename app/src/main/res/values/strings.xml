@@ -22,14 +22,14 @@
 
     <!--Fragment Environment-->
     <string name="str_building_status">Building Status</string>
-    <string name="str_air_temp">Air Temp\n</string>
-    <string name="str_humidity">Humidity\n</string>
-    <string name="str_uv_level">UV Level\n</string>
-    <string name="str_air_pressure">Air Pressure\n</string>
-    <string name="str_heart_rate">Heart Rate\n</string>
-    <string name="str_skin_temp">Skin Temp\n</string>
-    <string name="str_distance">Distance\n</string>
-    <string name="str_calories">Calories\n</string>
+    <string name="str_air_temp_template">Air Temp\n%.1f ℃</string>
+    <string name="str_humidity_template">Humidity\n%.1f %</string>
+    <string name="str_uv_level_template">UV Level\n%s</string>
+    <string name="str_air_pressure_template">Air Pressure\n%.1f hpa</string>
+    <string name="str_heart_rate_template">Heart Rate\n%d bpm</string>
+    <string name="str_skin_temp_template">Skin Temp\n%.1f ℃</string>
+    <string name="str_distance_template">Distance\n%d m</string>
+    <string name="str_calories_template">Calories\n%d kcal</string>
 
     <!--Fragment Preferences-->
     <string name="str_build_pref">Building Preferences</string>

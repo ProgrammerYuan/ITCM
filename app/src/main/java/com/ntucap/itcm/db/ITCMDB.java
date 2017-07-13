@@ -3,12 +3,11 @@ package com.ntucap.itcm.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ntucap.itcm.classes.ITCMObject;
 import com.ntucap.itcm.classes.ITCMUser;
-import com.ntucap.itcm.utils.DBUtility;
+import com.ntucap.itcm.utils.DBUtil;
 
 import java.util.ArrayList;
 
@@ -47,14 +46,14 @@ public class ITCMDB {
 
     public static long updateUser(ITCMUser user) {
         return getDB().update(ITCMUser.TABLE_NAME, user.getUpdateContentValue(),
-                ITCMUser.COLUMN_NAME_ID + " = " + DBUtility.longToSQLWrapper(user.getID()), null);
+                ITCMUser.COLUMN_NAME_ID + " = " + DBUtil.longToSQLWrapper(user.getID()), null);
     }
 
     public static long setCurrentUser(long id) {
         ContentValues cv = new ContentValues();
         cv.put(ITCMUser.COLUMN_NAME_CURRENT_USER, 1);
         return getDB().update(ITCMUser.TABLE_NAME, cv,
-                ITCMUser.COLUMN_NAME_ID + " = " + DBUtility.longToSQLWrapper(id), null);
+                ITCMUser.COLUMN_NAME_ID + " = " + DBUtil.longToSQLWrapper(id), null);
     }
 
     public static ITCMUser getSingleUser(long id) {
@@ -71,7 +70,7 @@ public class ITCMDB {
 
     public static ITCMUser getCurrentUser() {
         ITCMUser user = null;
-        String sql = "select * from " + DBUtility.stringToSQLWrapper(ITCMUser.TABLE_NAME) +
+        String sql = "select * from " + DBUtil.stringToSQLWrapper(ITCMUser.TABLE_NAME) +
                 " where " + ITCMUser.COLUMN_NAME_CURRENT_USER + " = 1;";
         Cursor cursor = getDB().rawQuery(sql, null);
         if (validateCursor(cursor, 0)) {
@@ -84,7 +83,7 @@ public class ITCMDB {
 
     public static Cursor getSingleUserCursor(long id) {
         if (db != null) {
-            String sql = "select * from " + DBUtility.stringToSQLWrapper(ITCMUser.TABLE_NAME) +
+            String sql = "select * from " + DBUtil.stringToSQLWrapper(ITCMUser.TABLE_NAME) +
                     " where " + ITCMUser.COLUMN_NAME_ID + " = " + id + ";";
             return db.rawQuery(sql, null);
         }

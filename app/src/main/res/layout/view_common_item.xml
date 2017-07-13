@@ -7,7 +7,7 @@
         android:id="@+id/ll_container_item_rewards"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="24dp"
+        android:minHeight="32dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <TextView

@@ -4,7 +4,7 @@ package com.ntucap.itcm.utils;
  * Created by ProgrammerYuan on 11/04/17.
  */
 
-public class DBUtility {
+public class DBUtil {
 
     public static final String COMMA_SEP = ",";
 

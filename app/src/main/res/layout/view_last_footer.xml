@@ -10,5 +10,5 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:minHeight="32dp"
-        android:src="@drawable/shape_bottom_roundrect_theme"/>
+        android:src="@drawable/shape_bottom_roundrect_theme_20dp"/>
 </LinearLayout>

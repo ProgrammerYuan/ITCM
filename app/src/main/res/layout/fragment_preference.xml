@@ -45,8 +45,8 @@
                 android:paddingStart="18dp">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_air_temp" />
 
                 <TextView
@@ -86,8 +86,8 @@
                 android:paddingStart="18dp">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_rela_humidity" />
 
                 <TextView
@@ -141,8 +141,8 @@
                 android:paddingStart="18dp">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_range_from" />
 
                 <TextView
@@ -183,8 +183,8 @@
                 android:paddingStart="18dp">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_range_to" />
 
                 <TextView
@@ -209,22 +209,4 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/iv_mask_frag_pref"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@color/trans_50"
-        android:alpha="0.0"/>
-
-    <com.dpizarro.uipicker.library.picker.PickerUI
-        android:id="@+id/picker_ui_frag_pref"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:backgroundColor="@color/white"
-        app:linesCenterColor="@color/mainTheme"
-        app:autoDismiss="false"
-        app:itemsClickables="true"
-        app:textCenterColor="@color/textGray"
-        app:textNoCenterColor="@color/textLightGray"/>
 </RelativeLayout>

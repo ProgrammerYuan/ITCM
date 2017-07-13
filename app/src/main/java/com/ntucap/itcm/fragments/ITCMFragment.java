@@ -55,4 +55,5 @@ public class ITCMFragment extends Fragment {
         }
         return mInflatedView;
     }
+
 }
