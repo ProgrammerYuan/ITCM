@@ -36,12 +36,12 @@ public class IrisSwitchButton extends RelativeLayout implements OnTouchListener 
     private int mItemCount;
     private int mChosenIndex = 0;
     private int mChosenTextColor, mNotChosenTextColor;
-    private OnIrisSwithListener mSwitchListener = null;
+    private OnIrisSwitchListener mSwitchListener = null;
     private TextView[] mItems;
 
     private static final int DEFAULT_ITEM_COUNT = 2;
     private static final int DEFAULT_ITEM_INDEX = 0;
-    private static final int DEFAULT_ANIM_DURATION = 500;
+    private static final int DEFAULT_ANIM_DURATION = 400;
     private static final int DEFAULT_CHOSEN_COLOR = R.color.white;
     private static final int DEFAULT_NOT_CHOSEN_COLOR = R.color.mainTheme;
 
@@ -116,7 +116,7 @@ public class IrisSwitchButton extends RelativeLayout implements OnTouchListener 
 
     }
 
-    public void setOnSwitchListener(OnIrisSwithListener listener) {
+    public void setOnSwitchListener(OnIrisSwitchListener listener) {
         this.mSwitchListener = listener;
     }
 
@@ -185,7 +185,7 @@ public class IrisSwitchButton extends RelativeLayout implements OnTouchListener 
         return true;
     }
 
-    public interface OnIrisSwithListener {
+    public interface OnIrisSwitchListener {
 
         void onSwitch(int switchIndex);
 

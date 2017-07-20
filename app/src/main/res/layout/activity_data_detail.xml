@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/rl_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/tv_title_act_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/textGray"
+            android:text="@string/str_dashboard"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/iv_nav_act_main"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_pair_band"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_chart_act_data_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@color/mainTheme"
+        android:orientation="vertical">
+        <com.ntucap.itcm.views.IrisSwitchButton
+            android:id="@+id/sw_dmy_act_data_detail"
+            android:layout_width="220dp"
+            android:layout_height="22dp"
+            android:layout_margin="8dp"
+            app:itemCount="3"/>
+        <FrameLayout
+            android:id="@+id/fl_container_act_data_detail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:padding="18dp">
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/daily_line_chart_act_data_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/monthly_bar_chart_act_data_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"/>
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/yearly_pie_chart_act_data_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

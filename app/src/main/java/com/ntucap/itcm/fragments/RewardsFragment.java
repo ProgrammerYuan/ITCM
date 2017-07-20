@@ -18,7 +18,7 @@ import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
  * Created by ProgrammerYuan on 28/05/17.
  */
 
-public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.OnIrisSwithListener{
+public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.OnIrisSwitchListener {
 
     private RecyclerView mRvRewards;
     private IrisSwitchButton mPanelSwitch;

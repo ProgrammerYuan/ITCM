@@ -27,6 +27,7 @@
             android:textSize="16sp"/>
 
         <ImageView
+            android:id="@+id/iv_nav_act_main"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_pair_band"
@@ -62,7 +63,7 @@
         android:id="@+id/picker_ui_act_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="16dp"
+        android:elevation="24dp"
         app:backgroundColor="@color/white"
         app:linesCenterColor="@color/mainTheme"
         app:autoDismiss="false"

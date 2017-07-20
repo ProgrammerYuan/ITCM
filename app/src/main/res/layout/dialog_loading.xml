@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:layout_margin="72dp"
+    android:gravity="center_horizontal"
+    android:background="@color/trans_white_50">
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/loading_dialog_loading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:indicatorName="LineSpinFadeLoaderIndicator"
+        app:indicatorColor="@color/textGray"/>
+    <TextView
+        android:id="@+id/tv_hint_dialog_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:gravity="center"
+        android:text="@string/str_band_pairing_hint"/>
+</LinearLayout>

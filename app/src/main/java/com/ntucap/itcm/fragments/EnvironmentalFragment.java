@@ -238,9 +238,16 @@ public class EnvironmentalFragment extends ITCMFragment {
     @Override
     public void onStart() {
         super.onStart();
+        appendToUI("FRAGMENT ONSTART!!!!!!!!!");
         final WeakReference<Activity> reference = new WeakReference<>((Activity) mContext);
         new HeartRateConsentTask().execute(reference);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        appendToUI("FRAGMENT ONSTOP!!!!!!!!!");
+        new DataUnsubscriptionTask().execute();
     }
 
     private class DataSubscriptionTask extends AsyncTask<Void, Void, Void> {
@@ -285,10 +292,43 @@ public class EnvironmentalFragment extends ITCMFragment {
         }
     }
 
+    private class DataUnsubscriptionTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                if (getConnectedBandClient()) {
+                    client.getSensorManager().unregisterHeartRateEventListeners();
+                    client.getSensorManager().unregisterBarometerEventListeners();
+                    client.getSensorManager().unregisterDistanceEventListeners();
+                    client.getSensorManager().unregisterSkinTemperatureEventListeners();
+                    client.getSensorManager().unregisterUVEventListeners();
+                }
+            } catch (BandException e) {
+                String exceptionMessage = "";
+                switch (e.getErrorType()) {
+                    case UNSUPPORTED_SDK_VERSION_ERROR:
+                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.\n";
+                        break;
+                    case SERVICE_ERROR:
+                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.\n";
+                        break;
+                    default:
+                        exceptionMessage = "Unknown error occured: " + e.getMessage() + "\n";
+                        break;
+                }
+                appendToUI(exceptionMessage);
+
+            } catch (Exception e) {
+                appendToUI(e.getMessage());
+            }
+            return null;
+        }
+    }
+
     private class HeartRateConsentTask extends AsyncTask<WeakReference<Activity>, Void, Boolean> {
 
         private boolean mConsentGiven;
-
 
         @Override
         protected Boolean doInBackground(WeakReference<Activity>... params) {

@@ -19,7 +19,7 @@ public class PickerHideEvent {
     }
 
     public void setResponse(String response) {
-        this.mResponse = response == null ? "" : mResponse;
+        this.mResponse = (response == null) ? "" : response;
     }
 
     public int getEventId() {

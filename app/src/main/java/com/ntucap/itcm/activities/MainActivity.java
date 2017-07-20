@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.dpizarro.uipicker.library.picker.PickerUI;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.events.BandConnectEvent;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
 import com.ntucap.itcm.fragments.EnvironmentalFragment;
@@ -20,6 +21,8 @@ import com.ntucap.itcm.fragments.MeFragment;
 import com.ntucap.itcm.fragments.PreferenceFragment;
 import com.ntucap.itcm.fragments.RewardsFragment;
 import com.ntucap.itcm.utils.adapters.PagerFragmentAdapter;
+import com.ntucap.itcm.utils.dialogs.ITCMDialogFragment;
+import com.ntucap.itcm.utils.dialogs.ITCMLoadingDialog;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -33,13 +36,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements ViewPager.OnPageChangeListener, OnTabSelectListener,
-        View.OnTouchListener, PickerUI.PickerUIItemClickListener{
+        View.OnTouchListener, PickerUI.PickerUIItemClickListener, View.OnClickListener{
 
     private int mPickerEventId;
     private int mCurrentPickerIndex = 0;
 
     private TextView mTvTitle;
-    private ImageView mMask;
+    private ImageView mMask, mIvNavIcon;
     private PickerUI mPicker;
     private ViewPager mViewpager;
     private BottomBar mBottomBar;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         mTvTitle = (TextView) findViewById(R.id.tv_title_act_main);
         mViewpager = (ViewPager) findViewById(R.id.viewPager);
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        mIvNavIcon = (ImageView) findViewById(R.id.iv_nav_act_main);
         mMask = (ImageView) findViewById(R.id.iv_mask_act_main);
         mPicker = (PickerUI) findViewById(R.id.picker_ui_act_main);
         init();
@@ -85,7 +89,16 @@ public class MainActivity extends AppCompatActivity
     private void bindListeners() {
         mViewpager.addOnPageChangeListener(this);
         mPicker.setOnClickItemPickerUIListener(this);
+        mTvTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ITCMLoadingDialog dialog = ITCMLoadingDialog.newInstance(null);
+                dialog.show(getSupportFragmentManager(),"test");
+            }
+        });
         mBottomBar.setOnTabSelectListener(this);
+        mMask.setOnTouchListener(this);
+        mIvNavIcon.setOnClickListener(this);
     }
 
     private void controlMask(boolean show, int duration) {
@@ -135,21 +148,27 @@ public class MainActivity extends AppCompatActivity
     public void onPageSelected(int position) {
         mBottomBar.selectTabAtPosition(position, true);
         String title = "";
+        int imageResId = 0;
         switch (position) {
             case 0:
                 title = "Dashboard";
+                imageResId = R.drawable.ic_pair_band;
                 break;
             case 1:
                 title = "Preference";
+                imageResId = R.drawable.ic_upload;
                 break;
             case 2:
                 title = "Reward";
+                imageResId = R.drawable.ic_refresh;
                 break;
             case 3:
                 title = "Me";
+                imageResId = R.drawable.ic_settings;
                 break;
         }
         mTvTitle.setText(title);
+        mIvNavIcon.setImageResource(imageResId);
     }
 
     @Override
@@ -186,6 +205,25 @@ public class MainActivity extends AppCompatActivity
             );
         } else {
             mCurrentPickerIndex = position;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.iv_nav_act_main:
+                switch (mViewpager.getCurrentItem()) {
+                    case 0:
+                        EventBus.getDefault().post(new BandConnectEvent());
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
         }
     }
 }
