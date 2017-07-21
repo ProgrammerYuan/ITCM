@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ntucap.itcm.activities.SettingsActivity">
+    <RelativeLayout
+        android:id="@+id/rl_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:elevation="8dp">
+
+        <TextView
+            android:id="@+id/tv_title_act_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/textGray"
+            android:text="@string/str_title_settings"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/iv_nav_act_data_detail"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_back_arrow_black"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"/>
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/shape_roundedrect_solid_theme_20dp"
+                android:elevation="4dp"
+                android:gravity="center_vertical|start"
+                android:minHeight="36dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/str_title_device"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/ll_air_temp_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_bluetooth" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_air_temperature" />
+
+                <TextView
+                    android:id="@+id/tv_air_temp_act_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="On"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_rela_humid_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_wristband" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_relative_humidity" />
+
+                <TextView
+                    android:id="@+id/tv_humidity_act_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="No Bands Attached"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_roundedrect_solid_theme_20dp"
+                android:elevation="4dp"
+                android:gravity="center_vertical|start"
+                android:minHeight="36dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/str_title_general"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/ll_range_from_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_language" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_title_languages" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_range_to_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_notification" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_title_notifications" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_check_update_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_checkupdate" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_title_check_update" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_terms_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_terms" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_title_terms" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_about_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_about_us" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_title_about_us" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_help_act_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/selector_roundedrect_solid_white_20dp"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:minHeight="36dp"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_help" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:text="@string/str_title_help" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_right_arrow_black" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

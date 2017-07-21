@@ -137,11 +137,17 @@ public class IrisSwitchButton extends RelativeLayout implements OnTouchListener 
 
     private void move(int from, int to) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(mIvChosenMask, "x",
-                from * mSingleItemWidth, to * mSingleItemWidth);
+                from * mSingleItemWidth, to * mSingleItemWidth + getOffset(to));
         animator.setDuration(DEFAULT_ANIM_DURATION);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
         mChosenIndex = to;
+    }
+
+    private int getOffset(int index) {
+        if(index == 0) return 2;
+        if(index == mItemCount - 1) return -2;
+        return 0;
     }
 
     @Override

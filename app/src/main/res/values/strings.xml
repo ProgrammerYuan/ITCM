@@ -83,4 +83,14 @@
         <item>Cold</item>
     </string-array>
 
+    <!--Settings Activity-->
+    <string name="str_title_settings">Settings</string>
+    <string name="str_title_device">Device</string>
+    <string name="str_title_general">General</string>
+    <string name="str_title_languages">Languages</string>
+    <string name="str_title_notifications">Notifications</string>
+    <string name="str_title_check_update">Check Updates</string>
+    <string name="str_title_terms">Terms &#38; Conditions</string>
+    <string name="str_title_about_us">About Us</string>
+    <string name="str_title_help">Help</string>
 </resources>
