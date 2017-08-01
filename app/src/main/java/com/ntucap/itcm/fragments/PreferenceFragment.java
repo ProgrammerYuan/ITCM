@@ -31,22 +31,15 @@ import java.util.Collections;
  */
 
 public class PreferenceFragment extends ITCMFragment
-        implements View.OnClickListener, PickerUI.PickerUIItemClickListener{
+        implements View.OnClickListener{
 
     private TextView mAirTempText, mHumidityText, mRangeFromText, mRangeToText;
     private LinearLayout mAirTempBtn, mHumidityBtn,mRangeFromBtn, mRangeToBtn;
     private ArrayList<String> mAirTempArray, mHumidityArray, mRangeFromArray, mRangeToArray;
 
-    private int mCurrentPickerIndex = -1;
-    private int mAirTempSlideNumber, mHumiditySlideNumber, mRangeFromSlideNumber, mRangeToSlideNumber;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Initialization of the slide numbers
-        mAirTempSlideNumber = mHumiditySlideNumber = 0;
-        mRangeFromSlideNumber = mRangeToSlideNumber = 0;
 
         //Initialization of the arrays
         mAirTempArray = new ArrayList<>();
@@ -150,39 +143,5 @@ public class PreferenceFragment extends ITCMFragment
                 break;
         }
 
-    }
-
-    @Override
-    public void onItemClickPickerUI(int which, int position, String valueResult) {
-        switch (mCurrentPickerIndex) {
-            case 0:
-                if (mAirTempSlideNumber == position) {
-                    mAirTempText.setText(valueResult);
-                } else {
-                    mAirTempSlideNumber = position;
-                }
-                break;
-            case 1:
-                if (mHumiditySlideNumber == position) {
-                    mHumidityText.setText(valueResult);
-                } else {
-                    mHumiditySlideNumber = position;
-                }
-                break;
-            case 2:
-                if (mRangeFromSlideNumber == position) {
-                    mRangeFromText.setText(valueResult);
-                } else {
-                    mRangeFromSlideNumber = position;
-                }
-                break;
-            case 3:
-                if (mRangeToSlideNumber == position) {
-                    mRangeToText.setText(valueResult);
-                } else {
-                    mRangeToSlideNumber = position;
-                }
-                break;
-        }
     }
 }

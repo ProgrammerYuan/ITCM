@@ -5,7 +5,7 @@ import android.database.Cursor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ntucap.itcm.utils.DBUtil;
-import com.ntucap.itcm.utils.ValidationUtility;
+import com.ntucap.itcm.utils.ValidationUtil;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -18,12 +18,14 @@ public class ITCMUser extends ITCMObject implements Serializable{
 
     private long mId;
     private int mAge;
+    private int mHeight;
+    private int mWeight;
+    private boolean mIsCurrentUser = false;
     private String mEmail;
     private String mFirstName;
     private String mLastName;
     private String mPassword;
     private String mGender;
-    private boolean mIsCurrentUser = false;
 
     public static final String TABLE_NAME = "users";
     public static final String COLUMN_NAME_ID = "id";
@@ -33,6 +35,8 @@ public class ITCMUser extends ITCMObject implements Serializable{
     public static final String COLUMN_NAME_LASTNAME = "lastname";
     public static final String COLUMN_NAME_AGE = "age";
     public static final String COLUMN_NAME_GENDER = "gender";
+    public static final String COLUMN_NAME_WEIGHT = "weight";
+    public static final String COLUMN_NAME_HEIGHT = "height";
     public static final String COLUMN_NAME_CURRENT_USER = "current_user";
 
     public ITCMUser() {
@@ -58,16 +62,28 @@ public class ITCMUser extends ITCMObject implements Serializable{
      *
      */
     public ITCMUser(HashMap<String, String> paras) {
-        mEmail = ValidationUtility.validateHashmapGet(paras, "email", "");
-        mPassword = ValidationUtility.validateHashmapGet(paras, "password", "");
-        mFirstName = ValidationUtility.validateHashmapGet(paras, "firstname", "");
-        mLastName = ValidationUtility.validateHashmapGet(paras, "lastname", "");
-        mGender = ValidationUtility.validateHashmapGet(paras, "gender", "");
-        mAge = Integer.parseInt(ValidationUtility.validateHashmapGet(paras, "age", "0"));
+        mEmail = ValidationUtil.validateHashmapGet(paras, "email", "");
+        mPassword = ValidationUtil.validateHashmapGet(paras, "password", "");
+        mFirstName = ValidationUtil.validateHashmapGet(paras, "firstname", "");
+        mLastName = ValidationUtil.validateHashmapGet(paras, "lastname", "");
+        mGender = ValidationUtil.validateHashmapGet(paras, "gender", "");
+        mAge = Integer.parseInt(ValidationUtil.validateHashmapGet(paras, "age", "0"));
+    }
+
+    public void setIsCurrentUser(boolean isCurrentUser) {
+        this.mIsCurrentUser = isCurrentUser;
     }
 
     public long getID() {
         return mId;
+    }
+
+    public String getEmail() {
+        return mEmail;
+    }
+
+    public String getPassword() {
+        return mPassword;
     }
 
     public HashMap<String, String> getData() {
@@ -78,8 +94,8 @@ public class ITCMUser extends ITCMObject implements Serializable{
         data.put("lastname", this.mLastName);
         data.put("age", String.valueOf(this.mAge));
         data.put("gender", this.mGender);
-        data.put("weight", String.valueOf(70));
-        data.put("height", String.valueOf(183));
+        data.put("weight", String.valueOf(this.mWeight));
+        data.put("height", String.valueOf(this.mHeight));
         return data;
     }
 
@@ -92,7 +108,9 @@ public class ITCMUser extends ITCMObject implements Serializable{
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_FIRSTNAME) + DBUtil.SQL_VARCHAR255_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_LASTNAME) + DBUtil.SQL_VARCHAR255_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_AGE) + DBUtil.SQL_INTEGER_TYPE +
-                DBUtil.stringToSQLWrapper(COLUMN_NAME_GENDER) + DBUtil.SQL_INTEGER_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_GENDER) + DBUtil.SQL_VARCHAR255_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_WEIGHT) + DBUtil.SQL_INTEGER_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_HEIGHT) + DBUtil.SQL_INTEGER_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtil.SQL_TINYINT_TYPE +
                 ");";
     }
@@ -106,6 +124,8 @@ public class ITCMUser extends ITCMObject implements Serializable{
         cv.put(COLUMN_NAME_LASTNAME, mLastName);
         cv.put(COLUMN_NAME_AGE, mAge);
         cv.put(COLUMN_NAME_GENDER, mGender);
+        cv.put(COLUMN_NAME_WEIGHT, mWeight);
+        cv.put(COLUMN_NAME_HEIGHT, mHeight);
         cv.put(COLUMN_NAME_CURRENT_USER, mIsCurrentUser);
         return cv;
     }

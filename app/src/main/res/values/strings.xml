@@ -16,8 +16,12 @@
     <string name="str_lastname_hint">Last Name</string>
     <string name="str_age_hint">Age: 25</string>
     <string name="str_gender_hint">Gender: Male</string>
+    <string name="str_weight_hint">Weight(kg): 70</string>
+    <string name="str_height_hint">Height(cm): 183</string>
     <string name="str_age_format">Age: %d</string>
     <string name="str_gender_format">Gender: %s</string>
+    <string name="str_weight_format">Weight(kg): %d</string>
+    <string name="str_height_format">Height(cm): %d</string>
     <string name="str_forgot_password">Forgor Password?</string>
 
     <!--Fragment Environment-->

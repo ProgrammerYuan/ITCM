@@ -4,10 +4,12 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -27,6 +29,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.utils.ChartUtil.DateAxisValueFormatter;
 import com.ntucap.itcm.utils.ChartUtil.TemperatureAxisValueFormatter;
+import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.views.IrisSwitchButton;
 
 import java.util.ArrayList;
@@ -35,7 +38,7 @@ import java.util.ArrayList;
  * Created by ProgrammerYuan on 19/07/17.
  */
 
-public class DataDetailActivity extends AppCompatActivity implements IrisSwitchButton.OnIrisSwitchListener {
+public class DataDetailActivity extends ITCMActivity implements IrisSwitchButton.OnIrisSwitchListener {
 
     private LineChart mLineChart;
     private BarChart mBarChart;
@@ -65,6 +68,18 @@ public class DataDetailActivity extends AppCompatActivity implements IrisSwitchB
         COLOR_MAIN_THEME = res.getColor(R.color.mainTheme);
         COLOR_SECOND_THEME = res.getColor(R.color.secondTheme);
         COLOR_THIRD_THEME = res.getColor(R.color.thirdTheme);
+        String testJson = "{\n" +
+                "    \"status\": 200,\n" +
+                "    \"message\": \"success\",\n" +
+                "    \"body\": \"success\"\n" +
+                "}";
+        JSONObject jsonObject  = JSONObject.parseObject(testJson);
+        Object body = jsonObject.get("body");
+        if(body instanceof String) {
+            Log.d("LOGTAG——STRING", (String) body);
+        } else {
+            Log.d("LOGTAG——JSONOBJ", ((JSONObject)body).toString());
+        }
     }
 
     @Override
@@ -73,7 +88,7 @@ public class DataDetailActivity extends AppCompatActivity implements IrisSwitchB
         randomInit();
         initBarChart();
         initPieChart();
-
+//        NetUtil.login("test1@itcm.com", "12345678");
     }
 
     private void initLineChart() {

@@ -1,6 +1,7 @@
 package com.ntucap.itcm.activities;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends ITCMActivity
         implements ViewPager.OnPageChangeListener, OnTabSelectListener,
         View.OnTouchListener, PickerUI.PickerUIItemClickListener, View.OnClickListener{
 
@@ -65,13 +66,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Intent intent = null;
         switch (id) {
             case R.id.iv_nav_act_main:
                 switch (mViewpager.getCurrentItem()) {
@@ -222,6 +224,8 @@ public class MainActivity extends AppCompatActivity
                     case 2:
                         break;
                     case 3:
+                        intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intent);
                         break;
                 }
         }

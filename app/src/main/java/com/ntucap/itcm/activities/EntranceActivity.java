@@ -9,13 +9,19 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.Response;
+import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.utils.NetUtil;
+import com.ntucap.itcm.utils.ValidationUtil;
 
 /**
  * Created by ProgrammerYuan on 04/04/17.
  */
 
-public class EntranceActivity extends AppCompatActivity implements View.OnClickListener{
+public class EntranceActivity extends ITCMActivity implements View.OnClickListener{
 
     private TextView tv_login_btn, tv_signup_btn;
     private LinearLayout ll_btns;
@@ -28,12 +34,7 @@ public class EntranceActivity extends AppCompatActivity implements View.OnClickL
         ll_btns = (LinearLayout) findViewById(R.id.ll_btns_act_entrance);
         ll_btns.setAlpha(0.0f);
         bindListeners();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showButtons();
-            }
-        }, 2000);
+        autologin();
     }
 
     private void bindListeners() {
@@ -65,6 +66,31 @@ public class EntranceActivity extends AppCompatActivity implements View.OnClickL
         ObjectAnimator animator = ObjectAnimator.ofFloat(ll_btns, "alpha", 0.0f, 1.0f);
         animator.setDuration(1 * 1000);
         animator.start();
+    }
+
+    private void autologin() {
+        ITCMUser user = ITCMApplication.getCurrentUser();
+        if (user != null) {
+            String username = user.getEmail(), password = user.getPassword();
+            NetUtil.login(username, password, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    ITCMApplication.setAccessToken(response.getString("access_token"));
+                    ITCMApplication.setTokenExpireDuration(response.getLong("expires_in"));
+                    ITCMApplication.setRefreshToken(response.getString("refresh_token"));
+                    NetUtil.getUserInfo(new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Intent intent = new Intent(EntranceActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, new DefaultErrorListener());
+                }
+            }, new DefaultErrorListener());
+        } else {
+            showButtons();
+        }
     }
 
 }

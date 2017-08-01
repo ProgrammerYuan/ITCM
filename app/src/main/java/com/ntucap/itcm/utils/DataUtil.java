@@ -10,6 +10,11 @@ public class DataUtil {
     private static final String[] MONTH_ACRONYM = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
             "Aug", "Sep", "Oct", "Nov", "Dec"};
 
+    public static final int TIME_SECOND = 1000;
+    public static final int TIME_MINUTE = 60 * TIME_SECOND;
+    public static final int TIME_HOUR = 60 * TIME_MINUTE;
+    public static final int TIME_DAY = 24 * TIME_HOUR;
+
     private static final int[] MONTH_DAYS_NUM = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     public static String getMonth(int index) {

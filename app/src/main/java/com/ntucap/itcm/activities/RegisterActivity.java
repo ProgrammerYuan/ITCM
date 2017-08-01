@@ -2,7 +2,6 @@ package com.ntucap.itcm.activities;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,38 +12,49 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.Response;
 import com.dpizarro.uipicker.library.picker.PickerUI;
 import com.dpizarro.uipicker.library.picker.PickerUISettings;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.github.johnpersano.supertoasts.library.SuperToast;
+import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.db.ITCMDB;
-import com.ntucap.itcm.utils.ValidationUtility;
+import com.ntucap.itcm.utils.NetUtil;
+import com.ntucap.itcm.utils.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class RegisterActivity extends AppCompatActivity
+public class RegisterActivity extends ITCMActivity
         implements View.OnClickListener, PickerUI.PickerUIItemClickListener
                     ,View.OnTouchListener{
 
     private static final String LOG_TAG = "RegisterActivity!";
 
-    private TextView tv_signup_btn, tv_age_input, tv_gender_input;
+    private TextView tv_signup_btn, tv_age_input, tv_gender_input,  tv_weight_input, tv_height_input;
     private EditText et_email_input, et_password_input, et_password_confirm_input,
             et_firstname_input, et_lastname_input;
     private ImageView iv_back_btn,iv_mask;
     private PickerUI mPicker;
-    private ArrayList<String> ages, genders;
-    private int pickerSelectedID;
+    private ArrayList<String> ages, genders, weights, heights;
     private int inputCount = 0;
-    private int age = -1;
-    private String gender, genderFormat, ageFormat;
+    private int age = -1,height, weight;
+    private String gender, genderFormat, ageFormat, weightFormat, heightFormat;
+
+    private int mCurrentPickerIndex;
+    private int[] mSlideNumbers = new int[4];
 
     private static final int MAX_INPUT_COUNT = 7;
     private static final int ALPHA_ANIM_DURATION = 400;
+
+    private static final int AGE_PICKER_INDEX = 0;
+    private static final int GENDER_PICKER_INDEX = 1;
+    private static final int WEIGHT_PICKER_INDEX = 2;
+    private static final int HEIGHT_PICKER_INDEX = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +68,22 @@ public class RegisterActivity extends AppCompatActivity
         et_lastname_input = (EditText) findViewById(R.id.et_lastname_input_act_register);
         tv_age_input = (TextView) findViewById(R.id.et_age_input_act_register);
         tv_gender_input = (TextView) findViewById(R.id.et_gender_input_act_register);
+        tv_weight_input = (TextView) findViewById(R.id.et_weight_input_act_register);
+        tv_height_input = (TextView) findViewById(R.id.et_height_input_act_register);
         iv_back_btn = (ImageView) findViewById(R.id.iv_back_arrow_act_register);
         iv_mask = (ImageView) findViewById(R.id.iv_mask_act_register);
         mPicker = (PickerUI) findViewById(R.id.picker_ui_act_register);
+
+        //Picker Data Initialization
         ages = new ArrayList<>();
-        for(int i = 0;i < 67; i ++)
-            ages.add(String.valueOf(i));
         genders = new ArrayList<>(Arrays.asList(new String[]{"Male", "Female"}));
+        weights = new ArrayList<>();
+        heights = new ArrayList<>();
+
+        initPickerDataSets();
+
+
+
         PickerUISettings pickerUISettings = new PickerUISettings.Builder()
                 .withAutoDismiss(false)
                 .withItemsClickables(true)
@@ -74,6 +93,26 @@ public class RegisterActivity extends AppCompatActivity
         bindListeners();
         genderFormat = getString(R.string.str_gender_format);
         ageFormat = getString(R.string.str_age_format);
+        weightFormat = getString(R.string.str_weight_format);
+        heightFormat = getString(R.string.str_height_format);
+    }
+
+    private void initPickerDataSets() {
+
+        for(int i = 0; i < 4;i ++)
+            mSlideNumbers[i] = 0;
+
+        for(int i = 0;i < 67; i ++)
+            ages.add(String.valueOf(i));
+
+        genders.add("Male");
+        genders.add("Female");
+
+        for(int i = 30; i <= 120; i ++)
+            weights.add(String.valueOf(i));
+
+        for(int i = 120; i <= 230; i ++)
+            heights.add(String.valueOf(i));
     }
 
     private void bindListeners() {
@@ -81,6 +120,8 @@ public class RegisterActivity extends AppCompatActivity
         iv_back_btn.setOnClickListener(this);
         tv_gender_input.setOnClickListener(this);
         tv_age_input.setOnClickListener(this);
+        tv_weight_input.setOnClickListener(this);
+        tv_height_input.setOnClickListener(this);
         new CountTextWatcher(et_email_input);
         new CountTextWatcher(et_password_input);
         new CountTextWatcher(et_password_confirm_input);
@@ -93,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity
     private HashMap<String, String> checkSignUpInput() {
         HashMap<String, String> ret = new HashMap<>();
         String email = et_email_input.getText().toString();
-        if(!ValidationUtility.validateEmail(email)) {
+        if(!ValidationUtil.validateEmail(email)) {
             SuperToast.create(this, "Not a valid Email Address", Style.DURATION_MEDIUM).show();
             return null;
         }
@@ -134,14 +175,27 @@ public class RegisterActivity extends AppCompatActivity
         ret.put("lastname", lastName);
         ret.put("age", String.valueOf(age));
         ret.put("gender", gender);
+        ret.put("weight", String.valueOf(weight));
+        ret.put("height", String.valueOf(height));
         return ret;
     }
 
     private void signUp(HashMap<String, String> parameters) {
         if(parameters == null) return;
-        ITCMUser user = new ITCMUser(parameters);
-        long id = ITCMDB.saveUser(user);
-        ITCMUser testUser = ITCMDB.getSingleUser(id);
+        final ITCMUser user = new ITCMUser(parameters);
+        user.setIsCurrentUser(true);
+        NetUtil.register(user, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                long id = ITCMDB.saveUser(user);
+                ITCMApplication.setCurrentUser(user);
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
+                RegisterActivity.this.finish();
+            }
+        }, new DefaultErrorListener());
+
+
     }
 
     private void controlMask(boolean show, int duration) {
@@ -182,13 +236,23 @@ public class RegisterActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.et_gender_input_act_register:
-                pickerSelectedID = -1;
+                mCurrentPickerIndex = GENDER_PICKER_INDEX;
                 mPicker.setItems(this, genders);
                 controlPicker(true);
                 break;
             case R.id.et_age_input_act_register:
-                pickerSelectedID = -1;
-                mPicker.setItems(this,ages);
+                mCurrentPickerIndex = AGE_PICKER_INDEX;
+                mPicker.setItems(this, ages);
+                controlPicker(true);
+                break;
+            case R.id.et_weight_input_act_register:
+                mCurrentPickerIndex = WEIGHT_PICKER_INDEX;
+                mPicker.setItems(this, weights);
+                controlPicker(true);
+                break;
+            case R.id.et_height_input_act_register:
+                mCurrentPickerIndex = HEIGHT_PICKER_INDEX;
+                mPicker.setItems(this, heights);
                 controlPicker(true);
             default:
                 break;
@@ -197,27 +261,34 @@ public class RegisterActivity extends AppCompatActivity
 
     @Override
     public void onItemClickPickerUI(int which, int position, String valueResult) {
-        Log.e(LOG_TAG, which + " / " + position + " / " + valueResult);
-        Log.e(LOG_TAG, "R.id.picker:" + R.id.picker_ui_act_register);
-        int value = -1;
-        try {
-            value = Integer.parseInt(valueResult);
-            age = value;
-        } catch (NumberFormatException e) {
-            Log.e(LOG_TAG, valueResult);
-            gender = valueResult;
-        }
-        if(pickerSelectedID == position) {
-            if(value == -1) {
-                if(tv_gender_input.getText().length() == 0) inputCount ++;
-                tv_gender_input.setText(String.format(genderFormat, valueResult));
-            } else {
-                if(tv_age_input.getText().length() == 0) inputCount ++;
-                tv_age_input.setText(String.format(ageFormat, age));
+        int originTextLength = -1;
+        if(mSlideNumbers[mCurrentPickerIndex] == position) {
+            switch (mCurrentPickerIndex) {
+                case AGE_PICKER_INDEX:
+                    originTextLength = tv_age_input.getText().length();
+                    age = Integer.valueOf(valueResult);
+                    tv_age_input.setText(String.format(ageFormat, age));
+                    break;
+                case GENDER_PICKER_INDEX:
+                    originTextLength = tv_gender_input.getText().length();
+                    gender = valueResult;
+                    tv_gender_input.setText(String.format(genderFormat, valueResult));
+                    break;
+                case WEIGHT_PICKER_INDEX:
+                    originTextLength = tv_weight_input.getText().length();
+                    weight = Integer.valueOf(valueResult);
+                    tv_weight_input.setText(String.format(weightFormat, weight));
+                    break;
+                case HEIGHT_PICKER_INDEX:
+                    originTextLength = tv_height_input.getText().length();
+                    height = Integer.valueOf(valueResult);
+                    tv_height_input.setText(String.format(heightFormat, height));
+                    break;
             }
+            if(originTextLength == 0) inputCount ++;
             controlPicker(false);
         } else {
-            pickerSelectedID = position;
+            mSlideNumbers[mCurrentPickerIndex] = position;
         }
     }
 

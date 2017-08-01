@@ -1,7 +1,6 @@
 package com.ntucap.itcm.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,9 +10,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.utils.NetUtil;
+import com.ntucap.itcm.utils.ValidationUtil;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends ITCMActivity implements View.OnClickListener{
 
     private static final String LOG_TAG = "LoginActivity!";
 
@@ -68,9 +73,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        String username = et_email_input.getText().toString(),
+                password = et_password_input.getText().toString();
+        if (!ValidationUtil.validateEmail(username)) {
+            toast("Please Input Valid Email Address");
+            return;
+        }
+        if (password.length() == 0) {
+            toast("Please Input Valid Password");
+            return;
+        }
+        NetUtil.login(username, password, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                ITCMApplication.setAccessToken(response.getString("access_token"));
+                ITCMApplication.setTokenExpireDuration(response.getLong("expires_in"));
+                ITCMApplication.setRefreshToken(response.getString("refresh_token"));
+                NetUtil.getUserInfo(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, new DefaultErrorListener());
+            }
+        }, new DefaultErrorListener());
     }
 
     private void setLoginBtnState() {

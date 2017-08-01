@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.ntucap.itcm.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends ITCMActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

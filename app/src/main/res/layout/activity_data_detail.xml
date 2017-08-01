@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:paddingLeft="4dp"
         android:paddingRight="12dp"
-        android:elevation="8dp">
+        android:elevation="6dp">
 
         <TextView
             android:id="@+id/tv_title_act_main"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/textGray"
-            android:text="@string/str_dashboard"
+            android:text="@string/str_air_temperature"
             android:textSize="16sp"/>
 
         <ImageView

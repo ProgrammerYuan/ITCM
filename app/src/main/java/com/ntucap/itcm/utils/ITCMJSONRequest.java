@@ -6,11 +6,13 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by ProgrammerYuan on 23/06/17.
@@ -23,6 +25,8 @@ public class ITCMJSONRequest extends Request<JSONObject> {
     private final String mUrl;
 
     private static final String DEFAULT_BODY_KEY = "body";
+    private static final String DEFAULT_STATUS_KEY = "status";
+    private static final String DEFAULT_MESSAGE_KEY = "message";
 
     public ITCMJSONRequest(int method, String url, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
         this(method, url, null, listener, errorListener);
@@ -37,7 +41,26 @@ public class ITCMJSONRequest extends Request<JSONObject> {
     }
 
     @Override
-    public Map<String, String> getParams() {
+    public String getUrl() {
+        if (getMethod() == Method.GET) {
+            String param = "?", sep;
+            Set<String> keyset = getParams().keySet();
+            int count = 0;
+            for (String key : keyset) {
+                if (count == 0) sep = "";
+                else sep = "&";
+                param += (sep + NetUtil.generateGETParamStr(
+                            key, ValidationUtil.validateHashmapGet(getParams(), key, "")));
+                count ++;
+            }
+            return mUrl + param;
+        }
+        return mUrl;
+    }
+
+    @Override
+    protected Map<String, String> getParams() {
+        if (mParams == null) mParams = new HashMap<>();
         return mParams;
     }
 
@@ -47,8 +70,23 @@ public class ITCMJSONRequest extends Request<JSONObject> {
             String json = new String(
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
+            JSONObject jsonObject = JSONObject.parseObject(json), ret = jsonObject;
+            if (jsonObject.containsKey(DEFAULT_BODY_KEY)) {
+                Object body = jsonObject.get(DEFAULT_BODY_KEY);
+                if(body instanceof JSONObject)
+                    ret = jsonObject.getJSONObject(DEFAULT_BODY_KEY);
+                int status;
+                if(jsonObject.containsKey(DEFAULT_STATUS_KEY)) {
+                    status = jsonObject.getIntValue(DEFAULT_STATUS_KEY);
+                    if(status != 200)
+                        return Response.error(
+                            new VolleyError(jsonObject.getString(DEFAULT_MESSAGE_KEY))
+                        );
+                }
+            }
+
             return Response.success(
-                    JSONObject.parseObject(json),
+                    ret,
                     HttpHeaderParser.parseCacheHeaders(response));
         } catch (JSONException e) {
             return Response.error(new ParseError(e));
