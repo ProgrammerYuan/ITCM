@@ -49,6 +49,7 @@
             android:layout_toRightOf="@id/iv_avatar_frag_me"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tv_username_frag_me"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -58,6 +59,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
             <TextView
+                android:id="@+id/tv_user_detail_frag_me"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
@@ -67,7 +69,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/ll_rela_humid_frag_me"
+        android:id="@+id/ll_change_pw_frag_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

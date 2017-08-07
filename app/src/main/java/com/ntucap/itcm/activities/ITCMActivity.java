@@ -54,7 +54,7 @@ public class ITCMActivity extends AppCompatActivity {
     class DefaultErrorListener implements ErrorListener {
         private String message;
 
-        DefaultErrorListener() {
+        public DefaultErrorListener() {
             this("Something Wrong With Your Network");
         }
 

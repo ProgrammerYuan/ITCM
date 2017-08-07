@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.classes.ITCMObject;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.utils.DBUtil;
@@ -40,8 +41,15 @@ public class ITCMDB {
         return cursor != null && cursor.getCount() > rowCountThreshold;
     }
 
+    public static long signout() {
+        long id = ITCMApplication.getCurrentUser().getID();
+        return setCurrentUser(id, false);
+    }
+
     public static long saveUser(ITCMUser user) {
-        return getDB().insert(ITCMUser.TABLE_NAME, null, user.getUpdateContentValue());
+        long id = getDB().insertWithOnConflict(ITCMUser.TABLE_NAME, null, user.getUpdateContentValue(),SQLiteDatabase.CONFLICT_IGNORE);
+        if(id == -1) return updateUser(user);
+        return id;
     }
 
     public static long updateUser(ITCMUser user) {
@@ -49,11 +57,11 @@ public class ITCMDB {
                 ITCMUser.COLUMN_NAME_ID + " = " + DBUtil.longToSQLWrapper(user.getID()), null);
     }
 
-    public static long setCurrentUser(long id) {
+    private static long setCurrentUser(long id, boolean isCurrentUser) {
         ContentValues cv = new ContentValues();
-        cv.put(ITCMUser.COLUMN_NAME_CURRENT_USER, 1);
+        cv.put(ITCMUser.COLUMN_NAME_CURRENT_USER, isCurrentUser);
         return getDB().update(ITCMUser.TABLE_NAME, cv,
-                ITCMUser.COLUMN_NAME_ID + " = " + DBUtil.longToSQLWrapper(id), null);
+                ITCMUser.COLUMN_NAME_ID + " = " + id, null);
     }
 
     public static ITCMUser getSingleUser(long id) {

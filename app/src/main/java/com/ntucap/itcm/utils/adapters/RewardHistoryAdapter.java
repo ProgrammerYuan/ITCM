@@ -14,6 +14,7 @@ import com.ntucap.itcm.utils.DataUtil;
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ProgrammerYuan on 28/05/17.
@@ -29,13 +30,14 @@ public class RewardHistoryAdapter extends SectioningAdapter {
         private String title;
         private ArrayList<ITCMReward> rewards;
 
-        public Section(int type, int sectionIndex, String title) {
+        public Section(int type) {
             this.type = type;
-            this.title = DataUtil.getMonth(11 - sectionIndex) + " 2016";
-            rewards = new ArrayList<>();
-            if(type == 0)
-                for(int i = 0; i < 30; i ++)
-                    rewards.add(new ITCMReward(i % 2, sectionIndex, i));
+        }
+
+        public Section(String title, List<? extends ITCMReward> rewards) {
+            this.type = 0;
+            this.title = title;
+            getData().addAll(rewards);
         }
 
         public String getTitle() {
@@ -46,9 +48,24 @@ public class RewardHistoryAdapter extends SectioningAdapter {
             return type;
         }
 
+        public ArrayList<ITCMReward> getData() {
+            if(rewards == null) rewards = new ArrayList<>();
+            return rewards;
+        }
+
         public ITCMReward getItem(int index) throws IndexOutOfBoundsException{
             if(rewards == null) return null;
             return rewards.get(index);
+        }
+
+        public ArrayList<ITCMReward> getRewards() {
+            if(rewards == null) return rewards = new ArrayList<>();
+            return rewards;
+        }
+
+        public int getRewardsSize() {
+            if(rewards == null) return 0;
+            return rewards.size();
         }
     }
 
@@ -107,9 +124,12 @@ public class RewardHistoryAdapter extends SectioningAdapter {
     public RewardHistoryAdapter(Context context, int numSections) {
         mContext = context;
         mSections = new ArrayList<>();
-        for(int i = 0; i < numSections * 2; i ++) {
-            mSections.add(new Section(i % 2, i / 2, DataUtil.getMonth(11 - i / 2)));
-        }
+    }
+
+    public void addSection(String title, List<? extends ITCMReward> rewards) {
+        mSections.add(new Section(title, rewards));
+        mSections.add(new Section(1));
+        this.notifyAllSectionsDataSetChanged();
     }
 
     @Override
@@ -119,7 +139,7 @@ public class RewardHistoryAdapter extends SectioningAdapter {
 
     @Override
     public int getNumberOfItemsInSection(int sectionIndex) {
-        return mSections.get(sectionIndex).rewards.size();
+        return mSections.get(sectionIndex).getRewardsSize();
     }
 
     @Override
@@ -163,7 +183,7 @@ public class RewardHistoryAdapter extends SectioningAdapter {
             Section s = mSections.get(sectionIndex);
             ITCMReward reward = s.getItem(itemIndex);
             int color;
-            if(reward.getType() == 0) color = mContext.getResources().getColor(R.color.forthTheme);
+            if(itemIndex % 2 == 0) color = mContext.getResources().getColor(R.color.forthTheme);
             else color = mContext.getResources().getColor(R.color.white);
             itemViewHolder.setBackground(color);
             itemViewHolder.fillData(reward);

@@ -2,6 +2,7 @@ package com.ntucap.itcm.classes;
 
 import android.content.ContentValues;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ntucap.itcm.utils.DataUtil;
 
 /**
@@ -10,29 +11,46 @@ import com.ntucap.itcm.utils.DataUtil;
 
 public class ITCMReward extends ITCMObject {
 
-    private int mType;
-    private int mQty, mValue;
+    private String mType;
+    private int mQty;
+    private String mValue;
     private String mDate;
     private String mRemark;
 
+    private static final String JSON_KEY_TYPE = "rewardType";
+    private static final String JSON_KEY_QTY = "rewardQuantity";
+    private static final String JSON_KEY_VALUE = "rewardValue";
+    private static final String JSON_KEY_DATE = "rewardDate";
+    private static final String JSON_KEY_REMARK = "rewardRemark";
+
+
     public ITCMReward() {
-        this(1);
+        super();
     }
 
-    public ITCMReward(int type) {
-        this(type, 0, 0, "", "");
+    public ITCMReward(JSONObject json) {
+        this();
+        mType = json.getString(JSON_KEY_TYPE);
+        mQty = json.getIntValue(JSON_KEY_QTY);
+        mValue = json.getString(JSON_KEY_VALUE);
+        mDate = json.getString(JSON_KEY_DATE);
+        mRemark = json.getString(JSON_KEY_REMARK);
     }
 
-    public ITCMReward(int type, int sectionIndex, int itemIndex) {
+    public ITCMReward(String type) {
+        this(type, 0, "", "", "");
+    }
+
+    public ITCMReward(String type, int sectionIndex, int itemIndex) {
         mType = type;
         mQty = 1;
-        mValue = 10;
+        mValue = "S$" + 10;
         mDate = (DataUtil.getMonthDaysNum(2016, sectionIndex % 12) - itemIndex) + " " +
                         DataUtil.getMonthAcronym(11 - sectionIndex % 12);
         mRemark = "Whatever Rewards~";
     }
 
-    public ITCMReward(int type, int qty, int value, String date, String remark) {
+    public ITCMReward(String type, int qty, String value, String date, String remark) {
         mType = type;
         mQty = qty;
         mValue = value;
@@ -40,7 +58,7 @@ public class ITCMReward extends ITCMObject {
         mRemark = remark;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         mType = type;
     }
 
@@ -48,7 +66,7 @@ public class ITCMReward extends ITCMObject {
         mQty = qty;
     }
 
-    public void setValue(int value) {
+    public void setValue(String value) {
         mValue = value;
     }
 
@@ -60,7 +78,7 @@ public class ITCMReward extends ITCMObject {
        mRemark = remark;
     }
 
-    public int getType() {
+    public String getType() {
         return mType;
     }
 
@@ -68,12 +86,12 @@ public class ITCMReward extends ITCMObject {
         return mQty;
     }
 
-    public int getValue() {
+    public String getValue() {
         return mValue;
     }
 
     public String getValueString() {
-        return String.format("S$%d", getValue());
+        return mValue;
     }
 
     public String getDate() {

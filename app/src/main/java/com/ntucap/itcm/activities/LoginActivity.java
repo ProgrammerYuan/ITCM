@@ -15,6 +15,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.ValidationUtil;
 
@@ -73,16 +75,13 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
     }
 
     private void login() {
-        String username = et_email_input.getText().toString(),
+        final String username = et_email_input.getText().toString(),
                 password = et_password_input.getText().toString();
         if (!ValidationUtil.validateEmail(username)) {
             toast("Please Input Valid Email Address");
             return;
         }
-        if (password.length() == 0) {
-            toast("Please Input Valid Password");
-            return;
-        }
+
         NetUtil.login(username, password, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -92,6 +91,11 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
                 NetUtil.getUserInfo(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        response.put("password", password);
+                        ITCMUser user = new ITCMUser(response);
+                        user.setIsCurrentUser(true);
+                        ITCMDB.saveUser(user);
+                        ITCMApplication.setCurrentUser(user);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

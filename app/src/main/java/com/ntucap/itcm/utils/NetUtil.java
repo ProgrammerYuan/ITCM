@@ -12,6 +12,7 @@ import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.classes.ITCMUser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.android.volley.Request.Method.POST;
@@ -47,6 +48,7 @@ public class NetUtil {
     private static final String USER_PASSWORD_SALT = "$2a$11$o8vgy4olY7wcraHQKm4sqO";
     private static final String USER_SIGNIN_PROVIDER = "ITCM_USER";
     private static final String USER_LANGUAGE = "zh_CN";
+
     public static void init(Context context) {
         mContext = context;
         mQueue = Volley.newRequestQueue(mContext);
@@ -54,21 +56,21 @@ public class NetUtil {
 
     private static void addRequestToQueue(Request request) {
         try {
-            addRequestToQueue(request);
+            getQueueInstance().add(request);
         } catch (NullPointerException e) {
             e.printStackTrace();
             Log.d(LOG_TAG, "QUEUE NOT AVAILABLE");
         }
     }
-    
+
     private static RequestQueue getQueueInstance() {
         if (mQueue != null) return mQueue;
-        else if(mContext != null) return mQueue = Volley.newRequestQueue(mContext);
+        else if (mContext != null) return mQueue = Volley.newRequestQueue(mContext);
         return null;
     }
 
     public static void register(ITCMUser user, Response.Listener<JSONObject> listener,
-                                Response.ErrorListener errorListener){
+                                Response.ErrorListener errorListener) {
         HashMap<String, String> params = user.getData();
         String password = ValidationUtil.validateHashmapGet(params, "password", "");
         password = BCrypt.hashpw(password, USER_PASSWORD_SALT);
@@ -77,7 +79,7 @@ public class NetUtil {
         params.put("signInProvider", USER_SIGNIN_PROVIDER);
         params.put("lang", USER_LANGUAGE);
         ITCMJSONRequest request = new ITCMJSONRequest(POST, URL_USER_REGISTER, params,
-                listener,errorListener);
+                listener, errorListener);
         addRequestToQueue(request);
     }
 
@@ -125,17 +127,40 @@ public class NetUtil {
         addRequestToQueue(request);
     }
 
-    public static void changePassword(String password, Response.Listener<JSONObject> listener,
+    public static void changePassword(String oldPassword, String password, Response.Listener<JSONObject> listener,
                                       Response.ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
         password = BCrypt.hashpw(password, USER_PASSWORD_SALT);
         params.put("password", password);
-        params.put("oldpassword", password);
+        params.put("oldpassword", oldPassword);
         params.put("access_token", ITCMApplication.getAccessToken());
         ITCMJSONRequest request = new ITCMJSONRequest(POST, URL_CHANGE_PASSWORD, params,
                 listener, errorListener);
         addRequestToQueue(request);
     }
+
+    /**
+     *
+     * @param listener Listener For Succeed Request
+     * @param errorListener Listener For Failed Request
+     *
+     * JSON Returned:
+     *      {
+     *          "status": int
+     *          "message": String
+     *          "body": {
+     *              "firstName": String
+     *              "lastName": String
+     *              "gender": String
+     *              "createTime": TimeStamp
+     *              "signInProvider": String---"ITCM_USER"
+     *              "weight": int
+     *              "email": String
+     *              "age": int
+     *              "height": int
+     *          }
+     *      }
+     */
 
     public static void getUserInfo(Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
@@ -155,26 +180,55 @@ public class NetUtil {
         addRequestToQueue(request);
     }
 
+    /**
+     *
+     * @param listener Listener For Succeed Request
+     * @param errorListener Listener For Failed Request
+     *
+     * JSON Returned:
+     *      {
+     *          "status": int
+     *          "message": String
+     *          "body": {
+     *              "sectionArray": [
+     *                  {
+     *                      "dataArray": [
+     *                          {
+     *                              "rewardRemark": String
+     *                              "rewardValue": String
+     *                              "rewardType": String
+     *                              "rewardQuantity": int
+     *                              "rewardDate": String
+     *                          }, ...
+     *                      ]
+     *                      "month": String
+     *                      "year": String
+     *                  }, ...
+     *              ]
+     *          }
+     *      }
+     */
+    public static void getRewardHistory(Response.Listener<JSONObject> listener,
+                                        Response.ErrorListener errorListener) {
+        requestGetWithParam(URL_GET_REWARD, null, listener, errorListener);
+    }
+
     public static void requestGetWithParam(String url, Map<String, String> params,
                                            Response.Listener<JSONObject> listener,
                                            Response.ErrorListener errorListener) {
-        if (params != null) {
-            params.put("access_token", ITCMApplication.getAccessToken());
-            ITCMJSONRequest request = new ITCMJSONRequest(GET, url, params, listener, errorListener);
-        } else {
-            Log.e(LOG_TAG, "NULL PARAMS");
-        }
+        if (params == null) params = new HashMap<>();
+        params.put("access_token", ITCMApplication.getAccessToken());
+        ITCMJSONRequest request = new ITCMJSONRequest(GET, url, params, listener, errorListener);
+        addRequestToQueue(request);
     }
 
     public static void requestPostWithParam(String url, Map<String, String> params,
-                                           Response.Listener<JSONObject> listener,
-                                           Response.ErrorListener errorListener) {
-        if (params != null) {
-            params.put("access_token", ITCMApplication.getAccessToken());
-            ITCMJSONRequest request = new ITCMJSONRequest(POST, url, params, listener, errorListener);
-        } else {
-            Log.e(LOG_TAG, "NULL PARAMS");
-        }
+                                            Response.Listener<JSONObject> listener,
+                                            Response.ErrorListener errorListener) {
+        if (params == null) params = new HashMap<>();
+        params.put("access_token", ITCMApplication.getAccessToken());
+        ITCMJSONRequest request = new ITCMJSONRequest(POST, url, params, listener, errorListener);
+        addRequestToQueue(request);
     }
 
     static String generateGETParamStr(String key, String value) {

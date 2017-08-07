@@ -44,10 +44,12 @@ public class ITCMUser extends ITCMObject implements Serializable{
     }
 
     public ITCMUser(JSONObject json) {
-
+        this();
+        updateUserInfo(json);
     }
 
     public ITCMUser(Cursor cursor) {
+        this();
         mId = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_ID));
         mEmail = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_EMAIL));
         mPassword = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PASSWORD));
@@ -62,6 +64,7 @@ public class ITCMUser extends ITCMObject implements Serializable{
      *
      */
     public ITCMUser(HashMap<String, String> paras) {
+        this();
         mEmail = ValidationUtil.validateHashmapGet(paras, "email", "");
         mPassword = ValidationUtil.validateHashmapGet(paras, "password", "");
         mFirstName = ValidationUtil.validateHashmapGet(paras, "firstname", "");
@@ -70,8 +73,23 @@ public class ITCMUser extends ITCMObject implements Serializable{
         mAge = Integer.parseInt(ValidationUtil.validateHashmapGet(paras, "age", "0"));
     }
 
+    public void updateUserInfo(JSONObject json) {
+        mPassword = json.getString("password");
+        mFirstName = json.getString("firstName");
+        mLastName = json.getString("lastName");
+        mGender = json.getString("gender");
+        mWeight = json.getIntValue("weight");
+        mHeight = json.getIntValue("height");
+        mAge = json.getIntValue("age");
+        mEmail = json.getString("email");
+    }
+
     public void setIsCurrentUser(boolean isCurrentUser) {
         this.mIsCurrentUser = isCurrentUser;
+    }
+
+    public void setPassword(String password) {
+
     }
 
     public long getID() {
@@ -84,6 +102,33 @@ public class ITCMUser extends ITCMObject implements Serializable{
 
     public String getPassword() {
         return mPassword;
+    }
+
+    public String getFirstName() {
+        return mFirstName;
+    }
+
+    public String getLastName() {
+        return mLastName;
+    }
+
+    public String getFullName() {
+        return getLastName() + " " + getFirstName();
+    }
+
+    public int getAge() {
+        return mAge;
+    }
+
+    public String getGender() {
+        return mGender;
+    }
+
+    public String getCombinedDetail() {
+        String ret = "Email: " + getEmail();
+        ret += "\n" + getGender() + " · ";
+        ret += String.valueOf(getAge()) + " years old";
+        return ret;
     }
 
     public HashMap<String, String> getData() {

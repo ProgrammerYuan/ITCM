@@ -7,6 +7,7 @@
     android:gravity="center_horizontal"
     android:background="@drawable/shape_roundedrect_solid_white_20dp">
     <TextView
+        android:id="@+id/tv_title_dialog_common"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -16,6 +17,7 @@
         android:background="@drawable/shape_upper_roundrect_theme_20dp"
         android:minHeight="36dp"/>
     <TextView
+        android:id="@+id/tv_content_dialog_common"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
@@ -28,6 +30,7 @@
         android:gravity="center"
         android:minHeight="36dp">
         <TextView
+            android:id="@+id/tv_cancel_dialog_common"
             android:layout_width="120dp"
             android:layout_height="32dp"
             android:layout_margin="4dp"
@@ -38,6 +41,7 @@
             android:textSize="16sp"
             android:textColor="@color/white"/>
         <TextView
+            android:id="@+id/tv_confirm_dialog_common"
             android:layout_width="120dp"
             android:layout_height="32dp"
             android:layout_margin="4dp"

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.activities.ITCMActivity;
 
 /**
  * Created by ProgrammerYuan on 18/04/17.
@@ -24,6 +25,16 @@ public class ITCMFragment extends Fragment {
 
     public ITCMFragment() {
         super();
+    }
+
+    public ITCMActivity getITCMActivity() {
+        ITCMActivity activity = null;
+        try {
+            activity = (ITCMActivity)mContext;
+        }catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+        return activity;
     }
 
     @Override

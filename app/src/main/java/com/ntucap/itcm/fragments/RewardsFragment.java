@@ -8,11 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.activities.ITCMActivity;
+import com.ntucap.itcm.classes.ITCMReward;
+import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.adapters.RewardHistoryAdapter;
 import com.ntucap.itcm.views.IrisSwitchButton;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
+
+import java.util.ArrayList;
 
 /**
  * Created by ProgrammerYuan on 28/05/17.
@@ -49,6 +58,7 @@ public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.On
             mRvRewards.setLayoutManager(new StickyHeaderLayoutManager());
             mRvRewards.setAdapter(mRewardsAdapter);
             bindListeners();
+            getReward();
         }
         return mInflatedView;
     }
@@ -69,5 +79,37 @@ public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.On
                 mRvRewards.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    private ArrayList<ITCMReward> parseRewardsJson(JSONArray rewardsJsonArray) {
+        ArrayList<ITCMReward> rewards = new ArrayList<>();
+        int len = rewardsJsonArray.size();
+        for(int i = 0; i < len; i ++)
+            rewards.add(new ITCMReward(rewardsJsonArray.getJSONObject(i)));
+        return rewards;
+    }
+
+    private void getReward() {
+        NetUtil.getRewardHistory(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray sectionArray = response.getJSONArray("sectionArray");
+                JSONObject object;
+                if(sectionArray != null) {
+                    int len = sectionArray.size();
+                    for (int i = 0; i < len; i ++) {
+                        object = sectionArray.getJSONObject(i);
+                        mRewardsAdapter.addSection(object.getString("month") + " " + object.getString("year"),
+                                parseRewardsJson(object.getJSONArray("dataArray"))
+                        );
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
     }
 }
