@@ -23,21 +23,20 @@ import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.NetUtil;
-import com.ntucap.itcm.utils.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class RegisterActivity extends ITCMActivity
-        implements View.OnClickListener, PickerUI.PickerUIItemClickListener
-                    ,View.OnTouchListener{
+public class UserProfileActivity extends ITCMActivity 
+        implements View.OnClickListener,
+        View.OnTouchListener,
+        PickerUI.PickerUIItemClickListener {
 
-    private static final String LOG_TAG = "RegisterActivity!";
-
+    private static final String LOG_TAG = "USERPROFILEACTIVITY!!!";
+    
     private TextView tv_signup_btn, tv_age_input, tv_gender_input,  tv_weight_input, tv_height_input;
-    private EditText et_email_input, et_password_input, et_password_confirm_input,
-            et_firstname_input, et_lastname_input;
+    private EditText et_firstname_input, et_lastname_input;
     private ImageView iv_back_btn,iv_mask;
     private PickerUI mPicker;
     private ArrayList<String> ages, genders, weights, heights;
@@ -48,7 +47,7 @@ public class RegisterActivity extends ITCMActivity
     private int mCurrentPickerIndex;
     private int[] mSlideNumbers = new int[4];
 
-    private static final int MAX_INPUT_COUNT = 9;
+    private static final int MAX_INPUT_COUNT = 6;
     private static final int ALPHA_ANIM_DURATION = 400;
 
     private static final int AGE_PICKER_INDEX = 0;
@@ -59,20 +58,17 @@ public class RegisterActivity extends ITCMActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        tv_signup_btn = (TextView) findViewById(R.id.tv_signup_confirm_act_register);
-        et_email_input = (EditText) findViewById(R.id.et_email_input_act_register);
-        et_password_input = (EditText) findViewById(R.id.et_pw_input_act_register);
-        et_password_confirm_input = (EditText) findViewById(R.id.et_pw_confirm_input_act_register);
-        et_firstname_input = (EditText) findViewById(R.id.et_firstname_input_act_register);
-        et_lastname_input = (EditText) findViewById(R.id.et_lastname_input_act_register);
-        tv_age_input = (TextView) findViewById(R.id.et_age_input_act_register);
-        tv_gender_input = (TextView) findViewById(R.id.et_gender_input_act_register);
-        tv_weight_input = (TextView) findViewById(R.id.et_weight_input_act_register);
-        tv_height_input = (TextView) findViewById(R.id.et_height_input_act_register);
-        iv_back_btn = (ImageView) findViewById(R.id.iv_back_arrow_act_register);
-        iv_mask = (ImageView) findViewById(R.id.iv_mask_act_register);
-        mPicker = (PickerUI) findViewById(R.id.picker_ui_act_register);
+        setContentView(R.layout.activity_user_profile);
+        tv_signup_btn = (TextView) findViewById(R.id.tv_update_act_profile);
+        et_firstname_input = (EditText) findViewById(R.id.et_firstname_input_act_profile);
+        et_lastname_input = (EditText) findViewById(R.id.et_lastname_input_act_profile);
+        tv_age_input = (TextView) findViewById(R.id.et_age_input_act_profile);
+        tv_gender_input = (TextView) findViewById(R.id.et_gender_input_act_profile);
+        tv_weight_input = (TextView) findViewById(R.id.et_weight_input_act_profile);
+        tv_height_input = (TextView) findViewById(R.id.et_height_input_act_profile);
+        iv_back_btn = (ImageView) findViewById(R.id.iv_back_arrow_act_profile);
+        iv_mask = (ImageView) findViewById(R.id.iv_mask_act_profile);
+        mPicker = (PickerUI) findViewById(R.id.picker_ui_act_profile);
 
         //Picker Data Initialization
         ages = new ArrayList<>();
@@ -122,9 +118,6 @@ public class RegisterActivity extends ITCMActivity
         tv_age_input.setOnClickListener(this);
         tv_weight_input.setOnClickListener(this);
         tv_height_input.setOnClickListener(this);
-        new CountTextWatcher(et_email_input);
-        new CountTextWatcher(et_password_input);
-        new CountTextWatcher(et_password_confirm_input);
         new CountTextWatcher(et_firstname_input);
         new CountTextWatcher(et_lastname_input);
         iv_mask.setOnTouchListener(this);
@@ -133,28 +126,6 @@ public class RegisterActivity extends ITCMActivity
 
     private HashMap<String, String> checkSignUpInput() {
         HashMap<String, String> ret = new HashMap<>();
-        String email = et_email_input.getText().toString();
-        if(!ValidationUtil.validateEmail(email)) {
-            SuperToast.create(this, "Not a valid Email Address", Style.DURATION_MEDIUM).show();
-            return null;
-        }
-
-        String password = et_password_input.getText().toString(),
-                passwordConfirm = et_password_confirm_input.getText().toString();
-        if(password.length() == 0) {
-            SuperToast.create(this, "Please input password", Style.DURATION_MEDIUM).show();
-            return null;
-        }
-
-        if(passwordConfirm.length() == 0) {
-            SuperToast.create(this, "Please confirm password", Style.DURATION_MEDIUM).show();
-            return null;
-        }
-
-        if(!password.equals(passwordConfirm)) {
-            SuperToast.create(this, "Inconsistent Password", Style.DURATION_MEDIUM).show();
-            return null;
-        }
 
         String firstName = et_firstname_input.getText().toString(),
                 lastName = et_lastname_input.getText().toString();
@@ -169,8 +140,6 @@ public class RegisterActivity extends ITCMActivity
             return null;
         }
 
-        ret.put("email", email);
-        ret.put("password", password);
         ret.put("firstname", firstName);
         ret.put("lastname", lastName);
         ret.put("age", String.valueOf(age));
@@ -180,18 +149,18 @@ public class RegisterActivity extends ITCMActivity
         return ret;
     }
 
-    private void signUp(HashMap<String, String> parameters) {
+    private void updateUserInfo(final HashMap<String, String> parameters) {
         if(parameters == null) return;
-        final ITCMUser user = new ITCMUser(parameters);
-        user.setIsCurrentUser(true);
-        NetUtil.register(user, new Response.Listener<JSONObject>() {
+        NetUtil.updateUserInfo(parameters, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                ITCMDB.saveUser(user);
-                ITCMApplication.setCurrentUser(user);
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                startActivity(intent);
-                RegisterActivity.this.finish();
+                ITCMUser user = ITCMApplication.getCurrentUser();
+                if(user != null) {
+                    user.updateInfo(parameters);
+                    ITCMDB.updateUser(user);
+                }
+                toast(response.getString("body"));
+                UserProfileActivity.this.finish();
             }
         }, new DefaultErrorListener());
 
@@ -227,30 +196,30 @@ public class RegisterActivity extends ITCMActivity
         int id = v.getId();
         Intent intent;
         switch (id) {
-            case R.id.tv_signup_confirm_act_register:
-                signUp(checkSignUpInput());
+            case R.id.tv_update_act_profile:
+                updateUserInfo(checkSignUpInput());
                 break;
-            case R.id.iv_back_arrow_act_register:
+            case R.id.iv_back_arrow_act_profile:
                 intent = new Intent(this, EntranceActivity.class);
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.et_gender_input_act_register:
+            case R.id.et_gender_input_act_profile:
                 mCurrentPickerIndex = GENDER_PICKER_INDEX;
                 mPicker.setItems(this, genders);
                 controlPicker(true);
                 break;
-            case R.id.et_age_input_act_register:
+            case R.id.et_age_input_act_profile:
                 mCurrentPickerIndex = AGE_PICKER_INDEX;
                 mPicker.setItems(this, ages);
                 controlPicker(true);
                 break;
-            case R.id.et_weight_input_act_register:
+            case R.id.et_weight_input_act_profile:
                 mCurrentPickerIndex = WEIGHT_PICKER_INDEX;
                 mPicker.setItems(this, weights);
                 controlPicker(true);
                 break;
-            case R.id.et_height_input_act_register:
+            case R.id.et_height_input_act_profile:
                 mCurrentPickerIndex = HEIGHT_PICKER_INDEX;
                 mPicker.setItems(this, heights);
                 controlPicker(true);
@@ -307,7 +276,7 @@ public class RegisterActivity extends ITCMActivity
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
         switch (id) {
-            case R.id.iv_mask_act_register:
+            case R.id.iv_mask_act_profile:
                 return mPicker.isPanelShown();
             default:
                 break;
@@ -319,7 +288,8 @@ public class RegisterActivity extends ITCMActivity
 
         EditText mEditTextListened;
         int oldLength;
-        public CountTextWatcher(EditText editText) {
+
+        CountTextWatcher(EditText editText) {
             this.mEditTextListened = editText;
             mEditTextListened.addTextChangedListener(this);
             oldLength = mEditTextListened.getText().length();

@@ -15,10 +15,15 @@ import com.android.volley.VolleyError;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ITCMActivity;
 import com.ntucap.itcm.classes.ITCMReward;
+import com.ntucap.itcm.classes.events.PickerHideEvent;
+import com.ntucap.itcm.classes.events.RefreshRewardsEvent;
+import com.ntucap.itcm.utils.EventUtil;
 import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.adapters.RewardHistoryAdapter;
 import com.ntucap.itcm.views.IrisSwitchButton;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
 import java.util.ArrayList;
@@ -89,6 +94,11 @@ public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.On
         return rewards;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(RefreshRewardsEvent event) {
+        getReward();
+    }
+
     private void getReward() {
         NetUtil.getRewardHistory(new Response.Listener<JSONObject>() {
             @Override
@@ -104,6 +114,7 @@ public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.On
                         );
                     }
                 }
+                toast("Rewards refreshed succeed");
             }
         }, new Response.ErrorListener() {
             @Override

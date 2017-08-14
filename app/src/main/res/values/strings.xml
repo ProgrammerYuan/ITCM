@@ -24,11 +24,17 @@
     <string name="str_height_format">Height(cm): %d</string>
     <string name="str_forgot_password">Forgor Password?</string>
 
+    <!--Activity User Profile-->
+    <string name="str_update_cap">UPDATE</string>
+
     <!--Activity Change Password-->
     <string name="str_change_password">Change Password</string>
     <string name="str_old_password_hint">Old Password</string>
     <string name="str_new_password_hint">New Password</string>
     <string name="str_submit_cap">SUBMIT</string>
+
+    <!--Activity Forgot Password-->
+    <string name="str_reset_cap">RESET</string>
 
     <!--Fragment Environment-->
     <string name="str_building_status">Building Status</string>

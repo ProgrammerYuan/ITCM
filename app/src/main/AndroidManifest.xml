@@ -36,7 +36,8 @@
             android:launchMode="singleTask" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ChangePasswordActivity" />
-        <activity android:name=".activities.ForgotPasswordActivity"></activity>
+        <activity android:name=".activities.ForgotPasswordActivity" />
+        <activity android:name=".activities.UserProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -16,11 +16,14 @@ import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.events.BandConnectEvent;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
+import com.ntucap.itcm.classes.events.UploadPreferenceEvent;
 import com.ntucap.itcm.fragments.EnvironmentalFragment;
 import com.ntucap.itcm.fragments.ITCMFragment;
 import com.ntucap.itcm.fragments.MeFragment;
 import com.ntucap.itcm.fragments.PreferenceFragment;
 import com.ntucap.itcm.fragments.RewardsFragment;
+import com.ntucap.itcm.utils.DataUtil;
+import com.ntucap.itcm.utils.EventUtil;
 import com.ntucap.itcm.utils.adapters.PagerFragmentAdapter;
 import com.ntucap.itcm.utils.dialogs.ITCMDialogFragment;
 import com.ntucap.itcm.utils.dialogs.ITCMLoadingDialog;
@@ -201,9 +204,22 @@ public class MainActivity extends ITCMActivity
     public void onItemClickPickerUI(int which, int position, String valueResult) {
         if (mCurrentPickerIndex == position) {
             controlPicker(false, mCurrentPickerIndex);
-            EventBus.getDefault().post(
-                    new PickerHideEvent(mPickerEventId, valueResult)
-            );
+            PickerHideEvent event = new PickerHideEvent(mPickerEventId, valueResult);
+            switch (mPickerEventId) {
+                case EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF:
+                    event.setResponseValue(3 - position);
+                    break;
+                case EventUtil.EVENT_ID_RANGE_TO_FRAG_PREF:
+                    event.setResponseValue(-position);
+                    break;
+                case EventUtil.EVENT_ID_AIRTEMP_FRAG_PREF:
+                case EventUtil.EVENT_ID_HUMID_FRAG_PREF:
+                    event.setResponseValue(DataUtil.extractOneNumberFromString(valueResult));
+                    break;
+                default:
+                    break;
+            }
+            EventBus.getDefault().post(event);
         } else {
             mCurrentPickerIndex = position;
         }
@@ -220,8 +236,10 @@ public class MainActivity extends ITCMActivity
                         EventBus.getDefault().post(new BandConnectEvent());
                         break;
                     case 1:
+                        EventBus.getDefault().post(new UploadPreferenceEvent());
                         break;
                     case 2:
+
                         break;
                     case 3:
                         intent = new Intent(MainActivity.this, SettingsActivity.class);

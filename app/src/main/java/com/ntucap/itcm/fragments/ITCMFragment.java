@@ -10,8 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ITCMActivity;
+
+import static com.github.johnpersano.supertoasts.library.Style.DURATION_MEDIUM;
 
 /**
  * Created by ProgrammerYuan on 18/04/17.
@@ -65,6 +68,14 @@ public class ITCMFragment extends Fragment {
             ((ViewGroup)parentView).removeView(mInflatedView);
         }
         return mInflatedView;
+    }
+
+    protected void toast(String message) {
+        toastWithDuration(message, DURATION_MEDIUM);
+    }
+
+    protected void toastWithDuration(String message, int duration) {
+        SuperToast.create(getActivity(), message, duration).show();
     }
 
 }

@@ -1,5 +1,8 @@
 package com.ntucap.itcm.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by ProgrammerYuan on 04/06/17.
  */
@@ -14,6 +17,8 @@ public class DataUtil {
     public static final int TIME_MINUTE = 60 * TIME_SECOND;
     public static final int TIME_HOUR = 60 * TIME_MINUTE;
     public static final int TIME_DAY = 24 * TIME_HOUR;
+
+    private static final Pattern sNumberPattern = Pattern.compile("-?\\d+");
 
     private static final int[] MONTH_DAYS_NUM = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
@@ -39,6 +44,13 @@ public class DataUtil {
         } else {
             return MONTH_DAYS_NUM[month];
         }
+    }
+
+    public static int extractOneNumberFromString(String str) {
+
+        Matcher m = sNumberPattern.matcher(str);
+        if(m.find()) return Integer.parseInt(m.group());
+        return 0;
     }
 
     public static boolean isLeapYear(int year) {

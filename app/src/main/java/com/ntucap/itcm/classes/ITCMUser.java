@@ -45,7 +45,7 @@ public class ITCMUser extends ITCMObject implements Serializable{
 
     public ITCMUser(JSONObject json) {
         this();
-        updateUserInfo(json);
+        updateByJson(json);
     }
 
     public ITCMUser(Cursor cursor) {
@@ -63,17 +63,28 @@ public class ITCMUser extends ITCMObject implements Serializable{
     /** For Test Cases
      *
      */
-    public ITCMUser(HashMap<String, String> paras) {
+    public ITCMUser(HashMap<String, String> params) {
         this();
-        mEmail = ValidationUtil.validateHashmapGet(paras, "email", "");
-        mPassword = ValidationUtil.validateHashmapGet(paras, "password", "");
-        mFirstName = ValidationUtil.validateHashmapGet(paras, "firstname", "");
-        mLastName = ValidationUtil.validateHashmapGet(paras, "lastname", "");
-        mGender = ValidationUtil.validateHashmapGet(paras, "gender", "");
-        mAge = Integer.parseInt(ValidationUtil.validateHashmapGet(paras, "age", "0"));
+        mEmail = ValidationUtil.validateHashmapGet(params, "email", "");
+        mPassword = ValidationUtil.validateHashmapGet(params, "password", "");
+        mFirstName = ValidationUtil.validateHashmapGet(params, "firstname", "");
+        mLastName = ValidationUtil.validateHashmapGet(params, "lastname", "");
+        mGender = ValidationUtil.validateHashmapGet(params, "gender", "");
+        mWeight = Integer.valueOf(params.get("weight"));
+        mHeight = Integer.valueOf(params.get("height"));
+        mAge = Integer.parseInt(ValidationUtil.validateHashmapGet(params, "age", "0"));
     }
 
-    public void updateUserInfo(JSONObject json) {
+    public void updateInfo(HashMap<String, String> params) {
+        mFirstName = params.get("firstName");
+        mLastName = params.get("lastName");
+        mGender = params.get("gender");
+        mWeight = Integer.valueOf(params.get("weight"));
+        mHeight = Integer.valueOf(params.get("height"));
+        mAge = Integer.valueOf(params.get("age"));
+    }
+
+    public void updateByJson(JSONObject json) {
         mPassword = json.getString("password");
         mFirstName = json.getString("firstName");
         mLastName = json.getString("lastName");

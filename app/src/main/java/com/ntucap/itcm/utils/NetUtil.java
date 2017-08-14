@@ -37,7 +37,8 @@ public class NetUtil {
     private static final String URL_REFRESH_TOKEN = URL_DOMAIN + "/oauth/token";
     private static final String URL_CHANGE_PASSWORD = URL_DOMAIN + "/api/user/updatePassword";
     private static final String URL_GET_USERINFO = URL_DOMAIN + "/api/user/userInfo";
-    private static final String URL_UPLOAD_USERINFO = URL_DOMAIN + "/api/user/updateUserInfo";
+    private static final String URL_UPLOAD_USERINFO = URL_DOMAIN + "/api/user/updateByJson";
+    private static final String URL_UPLOAD_USER_PREF = URL_DOMAIN + "/api/user/userPreference";
     private static final String URL_GET_USER_PREF = URL_DOMAIN + "/api/user/userPreferenceRecord";
     private static final String URL_GET_BUILDING_STATUS = URL_DOMAIN + "/api/buildingStatus";
     private static final String URL_GET_REWARD = URL_DOMAIN + "/api/rewardHistory";
@@ -96,6 +97,19 @@ public class NetUtil {
         addRequestToQueue(request);
     }
 
+    /**
+     *
+     * @param email User's email address to receive the password reset email
+     * @param listener Listener for succeed request
+     * @param errorListener Listener for failed request
+     * JSON Returened:
+     *      {
+     *          "statue": int
+     *          "message": String
+     *          "body": String
+     *      }
+     */
+
     public static void forgotPassword(String email, Response.Listener<JSONObject> listener,
                                       Response.ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
@@ -116,6 +130,21 @@ public class NetUtil {
         addRequestToQueue(request);
     }
 
+    /**
+     *
+     * @param listener Listener for succeed request
+     * @param errorListener Listener for failed request
+     *
+     * JSON Returned:
+     *      {
+     *          "access_token": String
+     *          "token_type": String --- "bearer"
+     *          "refresh_token": String
+     *          "expires_in": long
+     *          "scope": "String"
+     *      }
+     */
+
     public static void refreshToken(Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
         params.put("client_id", USER_CLIENT_ID);
@@ -126,6 +155,21 @@ public class NetUtil {
                 listener, errorListener);
         addRequestToQueue(request);
     }
+
+    /**
+     *
+     * @param oldPassword Previous password
+     * @param password New password
+     * @param listener Listener for succeed request
+     * @param errorListener Listener for failed request
+     *
+     * JSON Returened:
+     *      {
+     *          "statue": int
+     *          "message": String
+     *          "body": String
+     *      }
+     */
 
     public static void changePassword(String oldPassword, String password, Response.Listener<JSONObject> listener,
                                       Response.ErrorListener errorListener) {
@@ -141,8 +185,8 @@ public class NetUtil {
 
     /**
      *
-     * @param listener Listener For Succeed Request
-     * @param errorListener Listener For Failed Request
+     * @param listener Listener for succeed request
+     * @param errorListener Listener for failed request
      *
      * JSON Returned:
      *      {
@@ -170,9 +214,9 @@ public class NetUtil {
         addRequestToQueue(request);
     }
 
-    public static void updateUserInfo(ITCMUser user, Response.Listener<JSONObject> listener,
+    public static void updateUserInfo(Map<String, String> params, Response.Listener<JSONObject> listener,
                                       Response.ErrorListener errorListener) {
-        HashMap<String, String> params = user.getData();
+        if(params == null) params = new HashMap<>();
         params.put("lang", USER_LANGUAGE);
         params.put("access_token", ITCMApplication.getAccessToken());
         ITCMJSONRequest request = new ITCMJSONRequest(POST, URL_UPLOAD_USERINFO, params,
@@ -182,8 +226,8 @@ public class NetUtil {
 
     /**
      *
-     * @param listener Listener For Succeed Request
-     * @param errorListener Listener For Failed Request
+     * @param listener Listener for succeed request
+     * @param errorListener Listener for failed request
      *
      * JSON Returned:
      *      {
@@ -211,6 +255,23 @@ public class NetUtil {
     public static void getRewardHistory(Response.Listener<JSONObject> listener,
                                         Response.ErrorListener errorListener) {
         requestGetWithParam(URL_GET_REWARD, null, listener, errorListener);
+    }
+
+    /**
+     *
+     * @param params
+     * @param listener
+     * @param errorListener
+     *
+     * JSON Returned:
+     *      {
+     *
+     *      }
+     */
+    public static void uploadUserPreference(Map<String, String> params,
+                                            Response.Listener<JSONObject> listener,
+                                            Response.ErrorListener errorListener) {
+        requestPostWithParam(URL_UPLOAD_USER_PREF, params, listener, errorListener);
     }
 
     public static void requestGetWithParam(String url, Map<String, String> params,
