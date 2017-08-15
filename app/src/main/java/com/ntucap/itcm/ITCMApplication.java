@@ -78,6 +78,11 @@ public class ITCMApplication extends Application {
         return sCurrentUser = ITCMDB.getCurrentUser();
     }
 
+    public static String getCurrentUserEmail() {
+        if(getCurrentUser() != null) return getCurrentUser().getEmail();
+        return null;
+    }
+
     public static boolean isTokenExpired() {
         if (sAccessToken == null) return true;
         long currentTime = new Date().getTime();

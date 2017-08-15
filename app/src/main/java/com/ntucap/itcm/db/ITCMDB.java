@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.classes.ITCMObject;
 import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.classes.ITCMUserPreference;
 import com.ntucap.itcm.utils.DBUtil;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ITCMDB {
     public static void init(Context context) {
         classes = new ArrayList<>();
         classes.add(ITCMUser.class);
+        classes.add(ITCMUserPreference.class);
         mDBHelper = new ITCMSQLHelper(context, classes);
         db = mDBHelper.getWritableDatabase();
     }
@@ -54,7 +56,7 @@ public class ITCMDB {
 
     public static long updateUser(ITCMUser user) {
         return getDB().update(ITCMUser.TABLE_NAME, user.getUpdateContentValue(),
-                ITCMUser.COLUMN_NAME_ID + " = " + DBUtil.longToSQLWrapper(user.getID()), null);
+                ITCMUser.COLUMN_NAME_ID + " = " + user.getID(), null);
     }
 
     private static long setCurrentUser(long id, boolean isCurrentUser) {
@@ -90,10 +92,47 @@ public class ITCMDB {
     }
 
     public static Cursor getSingleUserCursor(long id) {
-        if (db != null) {
+        if (getDB() != null) {
             String sql = "select * from " + DBUtil.stringToSQLWrapper(ITCMUser.TABLE_NAME) +
                     " where " + ITCMUser.COLUMN_NAME_ID + " = " + id + ";";
-            return db.rawQuery(sql, null);
+            return getDB().rawQuery(sql, null);
+        }
+        return null;
+    }
+
+    public static long saveUserPreference(ITCMUserPreference preference) {
+        long id = getDB().insertWithOnConflict(ITCMUser.TABLE_NAME, null, preference.getUpdateContentValue(),SQLiteDatabase.CONFLICT_IGNORE);
+        if(id == -1) return updatePreference(preference);
+        return id;
+    }
+
+    public static long updatePreference(ITCMUserPreference preference) {
+        return getDB().update(ITCMUserPreference.TABLE_NAME, preference.getUpdateContentValue(),
+                ITCMUserPreference.COLUMN_NAME_EMAIL + " = " + preference.getEmail(), null);
+    }
+
+    public static ITCMUserPreference getCurrentUserPreference() {
+        return getUserPreference(ITCMApplication.getCurrentUserEmail());
+    }
+
+    public static ITCMUserPreference getUserPreference(String userEmail) {
+        if(userEmail == null) return null;
+        ITCMUserPreference preference = null;
+        Cursor cursor = getUserPreferenceCursor(userEmail);
+        if (validateCursor(cursor, 0)) {
+            cursor.moveToFirst();
+            preference = new ITCMUserPreference(cursor);
+            cursor.close();
+        }
+        return preference;
+    }
+
+    public static Cursor getUserPreferenceCursor(String userEmail) {
+        Cursor cursor;
+        if(getDB() != null) {
+            String sql = "select * from " + DBUtil.stringToSQLWrapper(ITCMUserPreference.TABLE_NAME) +
+                    " where " + ITCMUserPreference.COLUMN_NAME_EMAIL + " = " + DBUtil.stringToSQLWrapper(userEmail);
+            return getDB().rawQuery(sql, null);
         }
         return null;
     }

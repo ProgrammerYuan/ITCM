@@ -9,9 +9,10 @@ public class DBUtil {
     public static final String COMMA_SEP = ",";
 
     public static final String SQL_TEXT_TYPE = " TEXT" + COMMA_SEP;
-    public static final String SQL_TINYINT_TYPE = " TINYINT";
-    public static final String SQL_TINYINT_TYPE_WITH_SEP = " TINYINT" + COMMA_SEP;
+    public static final String SQL_TINYINT_TYPE = " TINYINT" + COMMA_SEP;
+    public static final String SQL_TINYINT_TYPE_WITHOUT_SEP = " TINYINT";
     public static final String SQL_INTEGER_TYPE = " INTEGER" + COMMA_SEP;
+    public static final String SQL_INTEGER_TYPE_WITHOUT_SEP = " INTEGER";
     public static final String SQL_INTEGER_PRIMARY_TYPE = " INTEGER PRIMARY KEY" + COMMA_SEP;
     public static final String SQL_LONG_TYPE = " LONG" + COMMA_SEP;
     public static final String SQL_VARCHAR255_TYPE = " VARCHAR(255)" + COMMA_SEP;
@@ -22,7 +23,7 @@ public class DBUtil {
     public static final String SQL_AUTO_INCREMENT = " AUTO_INCREMENT" + COMMA_SEP;
 
     public static String stringToSQLWrapper(String str) {
-        return '`' + str + '`';
+        return '\'' + str + '\'';
     }
 
     public static String intToSQLWrapper(int integer) {

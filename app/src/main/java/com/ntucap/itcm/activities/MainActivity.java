@@ -125,7 +125,7 @@ public class MainActivity extends ITCMActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventReceived(PickerShowEvent event) {
         if(mPickerEventId != event.getEventId()) {
-            mCurrentPickerIndex = 0;
+            mCurrentPickerIndex = event.getPickerSlideNumber();
             mPickerEventId = event.getEventId();
         }
         mPicker.setItems(this, Arrays.asList(getResources().getStringArray(event.getArrayResId())));
@@ -204,7 +204,7 @@ public class MainActivity extends ITCMActivity
     public void onItemClickPickerUI(int which, int position, String valueResult) {
         if (mCurrentPickerIndex == position) {
             controlPicker(false, mCurrentPickerIndex);
-            PickerHideEvent event = new PickerHideEvent(mPickerEventId, valueResult);
+            PickerHideEvent event = new PickerHideEvent(mPickerEventId, valueResult, position);
             switch (mPickerEventId) {
                 case EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF:
                     event.setResponseValue(3 - position);

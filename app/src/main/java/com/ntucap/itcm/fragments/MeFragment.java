@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ChangePasswordActivity;
 import com.ntucap.itcm.activities.EntranceActivity;
+import com.ntucap.itcm.activities.UserProfileActivity;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
@@ -31,8 +33,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class MeFragment extends ITCMFragment implements View.OnClickListener{
 
+    private int mClothingSN, mFeedbackSN;
+
     private TextView mTvUserName, mTvUserDetail;
     private LinearLayout mLLChangePassword, mLLClothing, mLLFeedbackSubmit, mLLLogout;
+    private RelativeLayout mRLProfile;
 
     @Override
     public void onStart() {
@@ -60,6 +65,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
             mLLClothing = (LinearLayout) mInflatedView.findViewById(R.id.ll_clothing_frag_me);
             mLLFeedbackSubmit = (LinearLayout) mInflatedView.findViewById(R.id.ll_feedback_frag_me);
             mLLLogout = (LinearLayout) mInflatedView.findViewById(R.id.ll_logout_frag_me);
+            mRLProfile = (RelativeLayout) mInflatedView.findViewById(R.id.rl_profile_frag_me);
             bindListeners();
         }
         return mInflatedView;
@@ -70,6 +76,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
         mLLClothing.setOnClickListener(this);
         mLLFeedbackSubmit.setOnClickListener(this);
         mLLLogout.setOnClickListener(this);
+        mRLProfile.setOnClickListener(this);
     }
 
     private void applyData() {
@@ -93,19 +100,20 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Intent intent = null;
         switch (id) {
             case R.id.ll_change_pw_frag_me:
-                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 getActivity().startActivity(intent);
                 break;
             case R.id.ll_clothing_frag_me:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_CLOTHING_FRAG_ME, 0)
+                        new PickerShowEvent(EventUtil.EVENT_ID_CLOTHING_FRAG_ME, 0, mClothingSN)
                 );
                 break;
             case R.id.ll_feedback_frag_me:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_SUBMITTING_FRAG_ME, 0)
+                        new PickerShowEvent(EventUtil.EVENT_ID_SUBMITTING_FRAG_ME, 0, mFeedbackSN)
                 );
                 break;
             case R.id.ll_logout_frag_me:
@@ -129,6 +137,10 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
                     }
                 });
                 dialog.show(getActivity().getSupportFragmentManager(), "");
+                break;
+            case R.id.rl_profile_frag_me:
+                intent = new Intent(getActivity(), UserProfileActivity.class);
+                getActivity().startActivity(intent);
                 break;
         }
     }

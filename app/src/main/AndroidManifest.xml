@@ -12,7 +12,7 @@
     <application
         android:name=".ITCMApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_logo_theme_48"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -37,7 +37,7 @@
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ChangePasswordActivity" />
         <activity android:name=".activities.ForgotPasswordActivity" />
-        <activity android:name=".activities.UserProfileActivity"></activity>
+        <activity android:name=".activities.UserProfileActivity"/>
     </application>
 
 </manifest>

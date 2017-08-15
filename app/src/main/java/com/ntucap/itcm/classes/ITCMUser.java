@@ -167,7 +167,7 @@ public class ITCMUser extends ITCMObject implements Serializable{
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_GENDER) + DBUtil.SQL_VARCHAR255_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_WEIGHT) + DBUtil.SQL_INTEGER_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_HEIGHT) + DBUtil.SQL_INTEGER_TYPE +
-                DBUtil.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtil.SQL_TINYINT_TYPE +
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtil.SQL_TINYINT_TYPE_WITHOUT_SEP +
                 ");";
     }
 

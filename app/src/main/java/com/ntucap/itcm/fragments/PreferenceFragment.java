@@ -18,9 +18,11 @@ import com.android.volley.VolleyError;
 import com.dpizarro.uipicker.library.picker.PickerUI;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ITCMActivity;
+import com.ntucap.itcm.classes.ITCMUserPreference;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
 import com.ntucap.itcm.classes.events.UploadPreferenceEvent;
+import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.EventUtil;
 import com.ntucap.itcm.utils.NetUtil;
 
@@ -40,7 +42,8 @@ import java.util.HashMap;
 public class PreferenceFragment extends ITCMFragment
         implements View.OnClickListener{
 
-    private int mAirTemp , mHumidity, mComfortLevelFrom, mComfortLevelTo;
+    private ITCMUserPreference mUserPreference = null;
+    private int mAirTempSN, mHumiditySN, mComfortLevelFromSN, mComfortLevelToSN;
 
     private TextView mAirTempText, mHumidityText, mRangeFromText, mRangeToText;
     private LinearLayout mAirTempBtn, mHumidityBtn,mRangeFromBtn, mRangeToBtn;
@@ -49,6 +52,8 @@ public class PreferenceFragment extends ITCMFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserPreference = ITCMDB.getCurrentUserPreference();
+        if(mUserPreference == null) mUserPreference = new ITCMUserPreference();
 
         //Initialization of the arrays
         mAirTempArray = new ArrayList<>();
@@ -64,7 +69,6 @@ public class PreferenceFragment extends ITCMFragment
                 mContext.getResources().getStringArray(R.array.str_array_hotness));
         Collections.addAll(mRangeToArray,
                 mContext.getResources().getStringArray(R.array.str_array_coldness));
-
     }
 
     @Override
@@ -94,9 +98,24 @@ public class PreferenceFragment extends ITCMFragment
             mHumidityBtn = (LinearLayout) mInflatedView.findViewById(R.id.ll_rela_humid_frag_pref);
             mRangeFromBtn = (LinearLayout) mInflatedView.findViewById(R.id.ll_range_from_frag_pref);
             mRangeToBtn = (LinearLayout) mInflatedView.findViewById(R.id.ll_range_to_frag_pref);
+            dataInit();
             bindListeners();
         }
         return mInflatedView;
+    }
+
+    private void dataInit() {
+        if(mUserPreference != null) {
+            mAirTempSN = mUserPreference.getIndoorAirTemp() - 18;
+            mHumiditySN = (mUserPreference.getIndoorHumidity() - 20) / 10;
+            mComfortLevelFromSN = 3 - mUserPreference.getComfortLevelFrom();
+            mComfortLevelToSN = -mUserPreference.getComfortLevelTo();
+
+            mAirTempText.setText(mAirTempArray.get(mAirTempSN));
+            mHumidityText.setText(mHumidityArray.get(mHumiditySN));
+            mRangeFromText.setText(mRangeFromArray.get(mComfortLevelFromSN));
+            mRangeToText.setText(mRangeToArray.get(mComfortLevelToSN));
+        }
     }
 
     private void bindListeners() {
@@ -110,19 +129,23 @@ public class PreferenceFragment extends ITCMFragment
     public void onEventReceived(PickerHideEvent event) {
         switch (event.getEventId()) {
             case EventUtil.EVENT_ID_AIRTEMP_FRAG_PREF:
+                mAirTempSN = event.getPickerSlideNumber();
+                mUserPreference.setIndoorAirTemp(event.getResponseValue());
                 mAirTempText.setText(event.getResponse());
-                mAirTemp = event.getResponseValue();
                 break;
             case EventUtil.EVENT_ID_HUMID_FRAG_PREF:
-                mHumidity = event.getResponseValue();
+                mHumiditySN = event.getPickerSlideNumber();
+                mUserPreference.setIndoorHumidity(event.getResponseValue());
                 mHumidityText.setText(event.getResponse());
                 break;
             case EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF:
-                mComfortLevelFrom = event.getResponseValue();
+                mComfortLevelFromSN = event.getPickerSlideNumber();
+                mUserPreference.setComfortLevelFrom(event.getResponseValue());
                 mRangeFromText.setText(event.getResponse());
                 break;
             case EventUtil.EVENT_ID_RANGE_TO_FRAG_PREF:
-                mComfortLevelTo = event.getResponseValue();
+                mComfortLevelToSN = event.getPickerSlideNumber();
+                mUserPreference.setComfortLevelTo(event.getResponseValue());
                 mRangeToText.setText(event.getResponse());
                 break;
         }
@@ -130,14 +153,10 @@ public class PreferenceFragment extends ITCMFragment
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventReceived(UploadPreferenceEvent event) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("preferredInfoorAirTemp", String.valueOf(mAirTemp));
-        params.put("preferredInfoorAirHumidity", String.valueOf(mHumidity));
-        params.put("acceptableComfortLevelFrom", String.valueOf(mComfortLevelFrom));
-        params.put("acceptableComfortLevelTo", String.valueOf(mComfortLevelTo));
-        NetUtil.uploadUserPreference(params, new Response.Listener<JSONObject>() {
+        NetUtil.uploadUserPreference(mUserPreference.getParams(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                ITCMDB.saveUserPreference(mUserPreference);
                 toast("User preference successfully uploaded");
             }
         }, new Response.ErrorListener() {
@@ -154,22 +173,34 @@ public class PreferenceFragment extends ITCMFragment
         switch (id) {
             case R.id.ll_air_temp_frag_pref:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_AIRTEMP_FRAG_PREF, R.array.str_array_air_temp)
+                        new PickerShowEvent(
+                                EventUtil.EVENT_ID_AIRTEMP_FRAG_PREF,
+                                R.array.str_array_air_temp,
+                                mAirTempSN)
                 );
                 break;
             case R.id.ll_rela_humid_frag_pref:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_HUMID_FRAG_PREF, R.array.str_array_humidity)
+                        new PickerShowEvent(
+                                EventUtil.EVENT_ID_HUMID_FRAG_PREF,
+                                R.array.str_array_humidity,
+                                mHumiditySN)
                 );
                 break;
             case R.id.ll_range_from_frag_pref:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF, R.array.str_array_hotness)
+                        new PickerShowEvent(
+                                EventUtil.EVENT_ID_RANGE_FROM_FRAG_PREF,
+                                R.array.str_array_hotness,
+                                mComfortLevelFromSN)
                 );
                 break;
             case R.id.ll_range_to_frag_pref:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_RANGE_TO_FRAG_PREF, R.array.str_array_coldness)
+                        new PickerShowEvent(
+                                EventUtil.EVENT_ID_RANGE_TO_FRAG_PREF,
+                                R.array.str_array_coldness,
+                                mComfortLevelToSN)
                 );
                 break;
             default:
