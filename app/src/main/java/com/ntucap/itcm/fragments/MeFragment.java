@@ -11,21 +11,29 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ChangePasswordActivity;
 import com.ntucap.itcm.activities.EntranceActivity;
 import com.ntucap.itcm.activities.UserProfileActivity;
 import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.classes.ITCMUserPreference;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
 import com.ntucap.itcm.db.ITCMDB;
+import com.ntucap.itcm.utils.DataUtil;
 import com.ntucap.itcm.utils.EventUtil;
+import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.dialogs.ITCMDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Date;
 
 /**
  * Created by ProgrammerYuan on 04/06/17.
@@ -40,16 +48,9 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
     private RelativeLayout mRLProfile;
 
     @Override
-    public void onStart() {
-        super.onStart();
-        applyData();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFragmentId = EventUtil.SENDER_ID_ME;
     }
 
     @Override
@@ -67,6 +68,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
             mLLLogout = (LinearLayout) mInflatedView.findViewById(R.id.ll_logout_frag_me);
             mRLProfile = (RelativeLayout) mInflatedView.findViewById(R.id.rl_profile_frag_me);
             bindListeners();
+            applyData();
         }
         return mInflatedView;
     }
@@ -90,9 +92,29 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
     public void onEventReceived(PickerHideEvent event) {
         switch (event.getEventId()) {
             case EventUtil.EVENT_ID_CLOTHING_FRAG_ME:
-
+                getBandData().setClothingIndex(event.getResponseValue());
                 break;
             case EventUtil.EVENT_ID_SUBMITTING_FRAG_ME:
+                getBandData().setDates(DataUtil.getYMDTFromDate(new Date()));
+                getBandData().setFeedBack(event.getResponseValue());
+                ITCMUserPreference userPreference = ITCMDB.getCurrentUserPreference();
+                if(userPreference != null) {
+                    getBandData().setUserPreferenceRange(
+                            userPreference.getComfortLevelTo(),
+                            userPreference.getComfortLevelFrom()
+                    );
+                }
+                NetUtil.uploadUserBandData(getBandData().getParams(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        toast("Band Data Upload Succeed");
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        toast("Something wrong with your network");
+                    }
+                });
                 break;
         }
     }
@@ -108,12 +130,18 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
                 break;
             case R.id.ll_clothing_frag_me:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_CLOTHING_FRAG_ME, 0, mClothingSN)
+                        new PickerShowEvent(
+                                EventUtil.EVENT_ID_CLOTHING_FRAG_ME,
+                                R.array.str_array_clothing,
+                                mClothingSN)
                 );
                 break;
             case R.id.ll_feedback_frag_me:
                 EventBus.getDefault().post(
-                        new PickerShowEvent(EventUtil.EVENT_ID_SUBMITTING_FRAG_ME, 0, mFeedbackSN)
+                        new PickerShowEvent(
+                                EventUtil.EVENT_ID_SUBMITTING_FRAG_ME,
+                                R.array.str_array_feedback,
+                                mFeedbackSN)
                 );
                 break;
             case R.id.ll_logout_frag_me:
@@ -126,7 +154,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
                 dialog.setConfirmListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("LOGTAGDIALOG___", "Confirm");
+                        Log.d("LOGTAGDIALOG", "Confirm");
                         if (ITCMDB.signout() != -1) {
                             ITCMApplication.setCurrentUser(null);
                             Intent intent = new Intent(getActivity(), EntranceActivity.class);

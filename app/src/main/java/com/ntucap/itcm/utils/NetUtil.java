@@ -39,6 +39,7 @@ public class NetUtil {
     private static final String URL_GET_USERINFO = URL_DOMAIN + "/api/user/userInfo";
     private static final String URL_UPLOAD_USERINFO = URL_DOMAIN + "/api/user/updateByJson";
     private static final String URL_UPLOAD_USER_PREF = URL_DOMAIN + "/api/user/userPreference";
+    private static final String URL_UPLOAD_BAND_DATA = URL_DOMAIN + "/api/dataUpload";
     private static final String URL_GET_USER_PREF = URL_DOMAIN + "/api/user/userPreferenceRecord";
     private static final String URL_GET_BUILDING_STATUS = URL_DOMAIN + "/api/buildingStatus";
     private static final String URL_GET_REWARD = URL_DOMAIN + "/api/rewardHistory";
@@ -272,6 +273,12 @@ public class NetUtil {
                                             Response.Listener<JSONObject> listener,
                                             Response.ErrorListener errorListener) {
         requestPostWithParam(URL_UPLOAD_USER_PREF, params, listener, errorListener);
+    }
+
+    public static void uploadUserBandData(Map<String, String> params,
+                                          Response.Listener<JSONObject> listener,
+                                          Response.ErrorListener errorListener) {
+        requestPostWithParam(URL_UPLOAD_BAND_DATA, params, listener, errorListener);
     }
 
     public static void requestGetWithParam(String url, Map<String, String> params,

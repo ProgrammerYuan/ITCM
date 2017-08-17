@@ -12,6 +12,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_roundedrect_solid_white_20dp"
         android:elevation="4dp">
 
         <LinearLayout
@@ -55,7 +56,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="bottom"
-                android:text="Liu Ziyuan"
                 android:textSize="20sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
@@ -64,8 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:text="Email: liuziyuan@ntu.edu.sg\nMale 28 years old"/>
+                android:layout_weight="1"/>
         </LinearLayout>
     </RelativeLayout>
 

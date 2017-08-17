@@ -52,6 +52,7 @@ public class PreferenceFragment extends ITCMFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFragmentId = EventUtil.SENDER_ID_PREFERENCE;
         mUserPreference = ITCMDB.getCurrentUserPreference();
         if(mUserPreference == null) mUserPreference = new ITCMUserPreference();
 
@@ -69,18 +70,6 @@ public class PreferenceFragment extends ITCMFragment
                 mContext.getResources().getStringArray(R.array.str_array_hotness));
         Collections.addAll(mRangeToArray,
                 mContext.getResources().getStringArray(R.array.str_array_coldness));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override

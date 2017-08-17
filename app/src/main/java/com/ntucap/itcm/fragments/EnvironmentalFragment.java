@@ -20,22 +20,39 @@ import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
 import com.microsoft.band.InvalidBandVersionException;
 import com.microsoft.band.UserConsent;
+import com.microsoft.band.sensors.BandAltimeterEvent;
+import com.microsoft.band.sensors.BandAltimeterEventListener;
+import com.microsoft.band.sensors.BandAmbientLightEvent;
+import com.microsoft.band.sensors.BandAmbientLightEventListener;
 import com.microsoft.band.sensors.BandBarometerEvent;
 import com.microsoft.band.sensors.BandBarometerEventListener;
 import com.microsoft.band.sensors.BandCaloriesEvent;
 import com.microsoft.band.sensors.BandCaloriesEventListener;
 import com.microsoft.band.sensors.BandDistanceEvent;
 import com.microsoft.band.sensors.BandDistanceEventListener;
+import com.microsoft.band.sensors.BandGsrEvent;
+import com.microsoft.band.sensors.BandGsrEventListener;
+import com.microsoft.band.sensors.BandGyroscopeEvent;
+import com.microsoft.band.sensors.BandGyroscopeEventListener;
 import com.microsoft.band.sensors.BandHeartRateEvent;
 import com.microsoft.band.sensors.BandHeartRateEventListener;
+import com.microsoft.band.sensors.BandPedometerEvent;
+import com.microsoft.band.sensors.BandPedometerEventListener;
+import com.microsoft.band.sensors.BandRRIntervalEvent;
+import com.microsoft.band.sensors.BandRRIntervalEventListener;
 import com.microsoft.band.sensors.BandSkinTemperatureEvent;
 import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
 import com.microsoft.band.sensors.BandUVEvent;
 import com.microsoft.band.sensors.BandUVEventListener;
+import com.microsoft.band.sensors.GsrSampleRate;
 import com.microsoft.band.sensors.HeartRateConsentListener;
+import com.microsoft.band.sensors.SampleRate;
+import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
+import com.ntucap.itcm.classes.ITCMBandData;
 import com.ntucap.itcm.classes.events.BandConnectEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
+import com.ntucap.itcm.utils.EventUtil;
 import com.ntucap.itcm.views.RoundProgressDisplayView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,11 +71,6 @@ import javax.xml.transform.Result;
 public class EnvironmentalFragment extends ITCMFragment {
 
     private BandClient client = null;
-    private TextView mTvHeartRate, mTvCalories, mTvUVLevel, mTvSkinTemp, mTvDistance, mTvAirTemp,
-            mTvHumidity, mTvAirPressure;
-    private RoundProgressDisplayView mHeartRateView, mCaloriesView, mUVLevelView, mSkinTempView,
-            mDistanceView, mAirTempView, mHumidityView, mAirPressView;
-
     private String TEMPLATE_HEARTRATE;
     private String TEMPLATE_CALORIES;
     private String TEMPLATE_UV_LEVEL;
@@ -67,6 +79,11 @@ public class EnvironmentalFragment extends ITCMFragment {
     private String TEMPLATE_AIR_TEMPERATURE;
     private String TEMPLATE_HUMIDITY;
     private String TEMPLATE_AIR_PRESSURE;
+
+    private TextView mTvHeartRate, mTvCalories, mTvUVLevel, mTvSkinTemp, mTvDistance, mTvAirTemp,
+            mTvHumidity, mTvAirPressure;
+    private RoundProgressDisplayView mHeartRateView, mCaloriesView, mUVLevelView, mSkinTempView,
+            mDistanceView, mAirTempView, mHumidityView, mAirPressView;
 
     private static final float MAX_HUMIDITY_VALUE = 90;
     private static final float MAX_HEARTRATE_VALUE = 180;
@@ -77,6 +94,7 @@ public class EnvironmentalFragment extends ITCMFragment {
         @Override
         public void onBandHeartRateChanged(final BandHeartRateEvent event) {
             if (event != null && mInitialized) {
+                getBandData().setHeartRate(event.getHeartRate());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -99,6 +117,7 @@ public class EnvironmentalFragment extends ITCMFragment {
                     @Override
                     public void run() {
                         try {
+                            getBandData().setCaloryToday(event.getCaloriesToday());
                             mTvCalories.setText(String.format(TEMPLATE_CALORIES, event.getCaloriesToday()));
                         } catch (InvalidBandVersionException e) {
                             mTvCalories.setText("Not Supported");
@@ -113,6 +132,7 @@ public class EnvironmentalFragment extends ITCMFragment {
         @Override
         public void onBandUVChanged(final BandUVEvent event) {
             if (event != null && mInitialized) {
+                getBandData().setUVIndexLevel(event.getUVIndexLevel());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -128,6 +148,7 @@ public class EnvironmentalFragment extends ITCMFragment {
         @Override
         public void onBandSkinTemperatureChanged(final BandSkinTemperatureEvent event) {
             if (event != null && mInitialized) {
+                getBandData().setSkinTemp(event.getTemperature());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -146,10 +167,14 @@ public class EnvironmentalFragment extends ITCMFragment {
         @Override
         public void onBandDistanceChanged(final BandDistanceEvent event) {
             if (event != null && mInitialized) {
+                getBandData().setMotionType(event.getMotionType());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+                            getBandData().setCurrentPace(event.getPace());
+                            getBandData().setCurrentSpeed(event.getSpeed());
+                            getBandData().setDistanceToday(event.getDistanceToday() / 100);
                             mTvDistance.setText(String.format(TEMPLATE_DISTANCE, event.getDistanceToday() / 100));
                         } catch (InvalidBandVersionException e) {
                             mTvDistance.setText(String.format(TEMPLATE_DISTANCE, 0));
@@ -165,6 +190,7 @@ public class EnvironmentalFragment extends ITCMFragment {
         @Override
         public void onBandBarometerChanged(final BandBarometerEvent event) {
             if (event != null && mInitialized) {
+                getBandData().setAirPressure(event.getAirPressure());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -180,6 +206,74 @@ public class EnvironmentalFragment extends ITCMFragment {
             }
         }
     };
+    private BandAmbientLightEventListener mAmbientLightListener = new BandAmbientLightEventListener() {
+
+        @Override
+        public void onBandAmbientLightChanged(BandAmbientLightEvent event) {
+            getBandData().setAmbientLight(event.getBrightness());
+        }
+    };
+    private BandAltimeterEventListener mAltimeterListener = new BandAltimeterEventListener() {
+        @Override
+        public void onBandAltimeterChanged(BandAltimeterEvent event) {
+            try {
+                getBandData().setFlightsAscended(event.getFlightsAscendedToday());
+                getBandData().setTotalGain(event.getTotalGainToday());
+            } catch (InvalidBandVersionException e) {
+                e.printStackTrace();
+            }
+            getBandData().setFlightsDesended(event.getFlightsDescended());
+            getBandData().setSteppingGain(event.getSteppingGain());
+            getBandData().setSteppingLoss(event.getSteppingLoss());
+            getBandData().setStepsAscended(event.getStepsAscended());
+            getBandData().setStepsDescended(event.getStepsDescended());
+            getBandData().setTotalLoss(event.getTotalLoss());
+            getBandData().setRate(event.getRate());
+        }
+    };
+
+    private BandGyroscopeEventListener mGyrocopeListener = new BandGyroscopeEventListener() {
+        @Override
+        public void onBandGyroscopeChanged(BandGyroscopeEvent event) {
+            getBandData().setAccelerationX(event.getAccelerationX());
+            getBandData().setAccelerationY(event.getAccelerationY());
+            getBandData().setAccelerationZ(event.getAccelerationZ());
+            getBandData().setAngularVelocityX(event.getAngularVelocityX());
+            getBandData().setAngularVelocityY(event.getAngularVelocityY());
+            getBandData().setAngularVelocityZ(event.getAngularVelocityZ());
+        }
+    };
+
+    private BandGsrEventListener mGsrListener = new BandGsrEventListener() {
+        @Override
+        public void onBandGsrChanged(BandGsrEvent event) {
+            getBandData().setGSR(event.getResistance());
+        }
+    };
+
+    private BandRRIntervalEventListener mRRIntervalListener = new BandRRIntervalEventListener() {
+        @Override
+        public void onBandRRIntervalChanged(BandRRIntervalEvent event) {
+            getBandData().setRRInterval(event.getInterval());
+        }
+    };
+
+    private BandPedometerEventListener mPedometerListener = new BandPedometerEventListener() {
+        @Override
+        public void onBandPedometerChanged(BandPedometerEvent event) {
+            try {
+                getBandData().setStepsToday(event.getStepsToday());
+            } catch (InvalidBandVersionException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFragmentId = EventUtil.SENDER_ID_ENVIRONMENTAL;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -262,11 +356,18 @@ public class EnvironmentalFragment extends ITCMFragment {
                         appendToUI("You have not given this application consent to access heart rate data yet."
                                 + " Please press the Heart Rate Consent button.\n");
                     }
-                    client.getSensorManager().registerBarometerEventListener(mBarometerListener);
+                    client.getSensorManager().registerUVEventListener(mUVListener);
                     client.getSensorManager().registerCaloriesEventListener(mCaloriesListener);
                     client.getSensorManager().registerDistanceEventListener(mDistanceListener);
+                    client.getSensorManager().registerBarometerEventListener(mBarometerListener);
+                    client.getSensorManager().registerAltimeterEventListener(mAltimeterListener);
+                    client.getSensorManager().registerPedometerEventListener(mPedometerListener);
+                    client.getSensorManager().registerRRIntervalEventListener(mRRIntervalListener);
+                    client.getSensorManager().registerAmbientLightEventListener(mAmbientLightListener);
+                    client.getSensorManager().registerGsrEventListener(mGsrListener, GsrSampleRate.MS200);
                     client.getSensorManager().registerSkinTemperatureEventListener(mSkinTemperatureListener);
-                    client.getSensorManager().registerUVEventListener(mUVListener);
+                    client.getSensorManager().registerGyroscopeEventListener(mGyrocopeListener, SampleRate.MS32);
+
                 } else {
                     appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
                 }
@@ -303,6 +404,12 @@ public class EnvironmentalFragment extends ITCMFragment {
                     client.getSensorManager().unregisterDistanceEventListeners();
                     client.getSensorManager().unregisterSkinTemperatureEventListeners();
                     client.getSensorManager().unregisterUVEventListeners();
+                    client.getSensorManager().unregisterAmbientLightEventListener(mAmbientLightListener);
+                    client.getSensorManager().unregisterAltimeterEventListener(mAltimeterListener);
+                    client.getSensorManager().unregisterGsrEventListener(mGsrListener);
+                    client.getSensorManager().unregisterGyroscopeEventListener(mGyrocopeListener);
+                    client.getSensorManager().unregisterRRIntervalEventListener(mRRIntervalListener);
+                    client.getSensorManager().unregisterPedometerEventListener(mPedometerListener);
                 }
             } catch (BandException e) {
                 String exceptionMessage = "";

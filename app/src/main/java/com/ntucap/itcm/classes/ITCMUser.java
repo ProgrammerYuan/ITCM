@@ -135,6 +135,14 @@ public class ITCMUser extends ITCMObject implements Serializable{
         return mGender;
     }
 
+    public int getHeight() {
+        return mHeight;
+    }
+
+    public int getWeight() {
+        return mWeight;
+    }
+
     public String getCombinedDetail() {
         String ret = "Email: " + getEmail();
         ret += "\n" + getGender() + " · ";

@@ -1,5 +1,7 @@
 package com.ntucap.itcm.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,10 @@ public class DataUtil {
     private static final Pattern sNumberPattern = Pattern.compile("-?\\d+");
 
     private static final int[] MONTH_DAYS_NUM = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    public static float toMinutes(long duration) {
+        return ((float)duration) / TIME_MINUTE;
+    }
 
     public static String getMonth(int index) {
         if(index >= 12) throw new IndexOutOfBoundsException("There's only 12 months.");
@@ -57,5 +63,18 @@ public class DataUtil {
         if(year % 4 != 0) return false;
         if(year % 100 == 0 && year % 400 != 0) return false;
         return true;
+    }
+
+    /**
+     *
+     * @param date Time to be transformed
+     * @return String array in order of [Year, Month&date, time]
+     *
+     * Example Return:
+     *     ["2017", "08-16", "13:50:17"]
+     */
+    public static String[] getYMDTFromDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM-dd HH:mm:ss");
+        return dateFormat.format(date).split(" ");
     }
 }

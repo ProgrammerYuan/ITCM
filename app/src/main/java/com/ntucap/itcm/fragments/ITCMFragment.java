@@ -11,8 +11,13 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.github.johnpersano.supertoasts.library.SuperToast;
+import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ITCMActivity;
+import com.ntucap.itcm.classes.ITCMBandData;
+import com.ntucap.itcm.classes.events.ShowToastEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import static com.github.johnpersano.supertoasts.library.Style.DURATION_MEDIUM;
 
@@ -22,8 +27,9 @@ import static com.github.johnpersano.supertoasts.library.Style.DURATION_MEDIUM;
 
 public class ITCMFragment extends Fragment {
 
-    protected View mInflatedView = null;
+    protected int mFragmentId;
     protected boolean mInitialized = false;
+    protected View mInflatedView = null;
     protected Context mContext;
 
     public ITCMFragment() {
@@ -43,6 +49,18 @@ public class ITCMFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -70,12 +88,16 @@ public class ITCMFragment extends Fragment {
         return mInflatedView;
     }
 
+    protected ITCMBandData getBandData() {
+        return ITCMApplication.getBandData();
+    }
+
     protected void toast(String message) {
         toastWithDuration(message, DURATION_MEDIUM);
     }
 
     protected void toastWithDuration(String message, int duration) {
-        SuperToast.create(getActivity(), message, duration).show();
+        EventBus.getDefault().post(new ShowToastEvent(mFragmentId, message, duration));
     }
 
 }

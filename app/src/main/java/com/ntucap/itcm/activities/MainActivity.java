@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.events.BandConnectEvent;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
+import com.ntucap.itcm.classes.events.ShowToastEvent;
 import com.ntucap.itcm.classes.events.UploadPreferenceEvent;
 import com.ntucap.itcm.fragments.EnvironmentalFragment;
 import com.ntucap.itcm.fragments.ITCMFragment;
@@ -36,11 +38,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends ITCMActivity
         implements ViewPager.OnPageChangeListener, OnTabSelectListener,
         View.OnTouchListener, PickerUI.PickerUIItemClickListener, View.OnClickListener{
+
+    private static final String LOG_TAG = "MAINACTIVITY";
 
     private int mPickerEventId;
     private int mCurrentPickerIndex = 0;
@@ -64,6 +69,8 @@ public class MainActivity extends ITCMActivity
         mIvNavIcon = (ImageView) findViewById(R.id.iv_nav_act_main);
         mMask = (ImageView) findViewById(R.id.iv_mask_act_main);
         mPicker = (PickerUI) findViewById(R.id.picker_ui_act_main);
+        for(int i = 0; i < 3; i ++)
+            Log.d(LOG_TAG, DataUtil.getYMDTFromDate(new Date())[i]);
         init();
         bindListeners();
     }
@@ -130,6 +137,20 @@ public class MainActivity extends ITCMActivity
         }
         mPicker.setItems(this, Arrays.asList(getResources().getStringArray(event.getArrayResId())));
         controlPicker(true, mCurrentPickerIndex);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(ShowToastEvent event) {
+        int senderId = event.getSenderId();
+        switch (senderId) {
+            case EventUtil.SENDER_ID_ENVIRONMENTAL:
+            case EventUtil.SENDER_ID_PREFERENCE:
+            case EventUtil.SENDER_ID_REWARD:
+            case EventUtil.SENDER_ID_ME:
+                if(mViewpager.getCurrentItem() == senderId)
+                    toastWithDuration(event.getMessage(), event.getDuration());
+                break;
+        }
     }
 
     @Override
@@ -216,6 +237,10 @@ public class MainActivity extends ITCMActivity
                 case EventUtil.EVENT_ID_HUMID_FRAG_PREF:
                     event.setResponseValue(DataUtil.extractOneNumberFromString(valueResult));
                     break;
+                case EventUtil.EVENT_ID_SUBMITTING_FRAG_ME:
+                    event.setResponseValue(3 - position);
+                    break;
+                case EventUtil.EVENT_ID_CLOTHING_FRAG_ME:
                 default:
                     break;
             }

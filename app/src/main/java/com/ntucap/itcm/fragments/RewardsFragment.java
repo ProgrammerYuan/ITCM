@@ -45,7 +45,7 @@ public class RewardsFragment extends ITCMFragment implements IrisSwitchButton.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFragmentId = EventUtil.SENDER_ID_REWARD;
     }
 
     @Override

@@ -101,7 +101,7 @@ public class ITCMDB {
     }
 
     public static long saveUserPreference(ITCMUserPreference preference) {
-        long id = getDB().insertWithOnConflict(ITCMUser.TABLE_NAME, null, preference.getUpdateContentValue(),SQLiteDatabase.CONFLICT_IGNORE);
+        long id = getDB().insertWithOnConflict(ITCMUserPreference.TABLE_NAME, null, preference.getUpdateContentValue(),SQLiteDatabase.CONFLICT_IGNORE);
         if(id == -1) return updatePreference(preference);
         return id;
     }

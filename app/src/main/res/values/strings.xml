@@ -22,7 +22,7 @@
     <string name="str_gender_format">Gender: %s</string>
     <string name="str_weight_format">Weight(kg): %d</string>
     <string name="str_height_format">Height(cm): %d</string>
-    <string name="str_forgot_password">Forgor Password?</string>
+    <string name="str_forgot_password">Forgot Password?</string>
 
     <!--Activity User Profile-->
     <string name="str_update_cap">UPDATE</string>
@@ -93,6 +93,26 @@
         <item>Comfortable</item>
     </string-array>
     <string-array name="str_array_coldness">
+        <item>Comfortable</item>
+        <item>Slightly Cool</item>
+        <item>Cool</item>
+        <item>Cold</item>
+    </string-array>
+
+    <!--Fragment Me-->
+    <string-array name="str_array_clothing">
+        <item>Short Sleeve Shirt &amp; Short Trousers</item>
+        <item>Short Sleeve Shirt &amp; Long Trousers</item>
+        <item>Long Sleeve Shirt &amp; Short Trousers</item>
+        <item>Long Sleeve Shirt &amp; Long Trousers</item>
+        <item>Outer Garment &amp; Short Trousers</item>
+        <item>Outer Garment &amp; Long Trousers</item>
+    </string-array>
+
+    <string-array name="str_array_feedback">
+        <item>Hot</item>
+        <item>Warm</item>
+        <item>Slightly Warm</item>
         <item>Comfortable</item>
         <item>Slightly Cool</item>
         <item>Cool</item>

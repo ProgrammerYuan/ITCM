@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.ntucap.itcm.classes.ITCMBandData;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.DataUtil;
@@ -24,6 +25,7 @@ public class ITCMApplication extends Application {
     private static long sTokenTimeStamp;
     private static long sTokenExpireDuration = 0;
     private static ITCMUser sCurrentUser = null;
+    private static ITCMBandData sBandData = null;
 
     public ITCMApplication() {
         super();
@@ -81,6 +83,11 @@ public class ITCMApplication extends Application {
     public static String getCurrentUserEmail() {
         if(getCurrentUser() != null) return getCurrentUser().getEmail();
         return null;
+    }
+
+    public static ITCMBandData getBandData() {
+        if(sBandData == null) sBandData = new ITCMBandData();
+        return sBandData;
     }
 
     public static boolean isTokenExpired() {
