@@ -100,7 +100,7 @@ public class ITCMUser extends ITCMObject implements Serializable{
     }
 
     public void setPassword(String password) {
-
+        mPassword = password;
     }
 
     public long getID() {

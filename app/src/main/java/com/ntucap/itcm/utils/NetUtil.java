@@ -208,11 +208,11 @@ public class NetUtil {
      */
 
     public static void getUserInfo(Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("access_token", ITCMApplication.getAccessToken());
-        ITCMJSONRequest request = new ITCMJSONRequest(GET, URL_GET_USERINFO, params,
-                listener, errorListener);
-        addRequestToQueue(request);
+        requestGetWithParam(URL_GET_USERINFO, null, listener, errorListener);
+        }
+
+    public static void getUserPreference(Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+        requestGetWithParam(URL_GET_USER_PREF, null, listener, errorListener);
     }
 
     public static void updateUserInfo(Map<String, String> params, Response.Listener<JSONObject> listener,

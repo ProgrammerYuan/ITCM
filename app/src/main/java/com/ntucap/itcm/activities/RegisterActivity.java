@@ -3,6 +3,7 @@ package com.ntucap.itcm.activities;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -187,9 +188,8 @@ public class RegisterActivity extends ITCMActivity
         NetUtil.register(user, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                ITCMDB.saveUser(user);
-                ITCMApplication.setCurrentUser(user);
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                toast("Registration succeed, check your email inbox please");
+                Intent intent = new Intent(RegisterActivity.this, EntranceActivity.class);
                 startActivity(intent);
                 RegisterActivity.this.finish();
             }

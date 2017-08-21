@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.preference.Preference;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ntucap.itcm.utils.DBUtil;
 
 import java.util.HashMap;
@@ -48,6 +49,23 @@ public class ITCMUserPreference extends ITCMObject {
         mIndoorHumidity = indoorHumidity;
         mComfortLevelFrom = comfortLevelFrom;
         mComfortLevelTo = comfortLevelTo;
+    }
+
+
+    /**
+     *
+     * @param json
+     *
+     * "preferredIndoorAirTemp": "25",
+     * "preferredIndoorAirHumidity": "50",
+     * "acceptableComfortLevelTo": "-1",
+     * "acceptableComfortLevelFrom": "1"
+     */
+    public ITCMUserPreference(JSONObject json) {
+        mIndoorAirTemp = json.getIntValue("preferredIndoorAirTemp");
+        mIndoorHumidity = json.getIntValue("preferredIndoorAirHumidity");
+        mComfortLevelFrom = json.getIntValue("acceptableComfortLevelFrom");
+        mComfortLevelTo = json.getIntValue("acceptableComfortLevelTo");
     }
 
     public HashMap<String, String> getParams() {

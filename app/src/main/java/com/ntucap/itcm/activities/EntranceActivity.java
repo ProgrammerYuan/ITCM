@@ -14,6 +14,8 @@ import com.android.volley.Response;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.classes.ITCMUserPreference;
+import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.ValidationUtil;
 
@@ -25,6 +27,13 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
 
     private TextView tv_login_btn, tv_signup_btn;
     private LinearLayout ll_btns;
+    private int networkResponseCount = 0;
+
+    ITCMUser updateUser = null;
+    ITCMUserPreference userPreference = null;
+
+    private static final int NETWORK_RESPONSE_COUNT_MAX = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +71,18 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
         }
     }
 
+    private void addNetworkResponseCount() {
+        networkResponseCount ++;
+        if(networkResponseCount == NETWORK_RESPONSE_COUNT_MAX) {
+            ITCMDB.saveUser(updateUser);
+            ITCMApplication.setCurrentUser(updateUser);
+            ITCMDB.saveUserPreference(userPreference);
+            Intent intent = new Intent(EntranceActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     private void showButtons() {
         ObjectAnimator animator = ObjectAnimator.ofFloat(ll_btns, "alpha", 0.0f, 1.0f);
         animator.setDuration(1 * 1000);
@@ -71,7 +92,7 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
     private void autologin() {
         ITCMUser user = ITCMApplication.getCurrentUser();
         if (user != null) {
-            String username = user.getEmail(), password = user.getPassword();
+            final String username = user.getEmail(), password = user.getPassword();
             NetUtil.login(username, password, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -81,9 +102,17 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
                     NetUtil.getUserInfo(new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Intent intent = new Intent(EntranceActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            response.put("password", password);
+                            updateUser = new ITCMUser(response);
+                            updateUser.setIsCurrentUser(true);
+                            addNetworkResponseCount();
+                        }
+                    }, new DefaultErrorListener());
+                    NetUtil.getUserPreference(new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            userPreference = new ITCMUserPreference(response);
+                            addNetworkResponseCount();
                         }
                     }, new DefaultErrorListener());
                 }

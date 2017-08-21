@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMUser;
+import com.ntucap.itcm.classes.ITCMUserPreference;
 import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.ValidationUtil;
@@ -28,8 +29,14 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
     private EditText et_email_input, et_password_input;
     private ImageView iv_back;
     private int inputCount = 0;
+    private int networkResponseCount = 0;
+
+    ITCMUser user = null;
+    ITCMUserPreference userPreference = null;
 
     private static final int INPUT_COUNT_MAX = 2;
+    private static final int NETWORK_RESPONSE_COUNT_MAX = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,18 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
         new CountTextWatcher(et_email_input);
         new CountTextWatcher(et_password_input);
         iv_back.setOnClickListener(this);
+    }
+
+    private void addNetworkResponseCount() {
+        networkResponseCount ++;
+        if(networkResponseCount == NETWORK_RESPONSE_COUNT_MAX) {
+            ITCMDB.saveUser(user);
+            ITCMApplication.setCurrentUser(user);
+            ITCMDB.saveUserPreference(userPreference);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -70,7 +89,6 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
                 break;
             default:
                 break;
-
         }
     }
 
@@ -92,13 +110,16 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
                     @Override
                     public void onResponse(JSONObject response) {
                         response.put("password", password);
-                        ITCMUser user = new ITCMUser(response);
+                        user = new ITCMUser(response);
                         user.setIsCurrentUser(true);
-                        ITCMDB.saveUser(user);
-                        ITCMApplication.setCurrentUser(user);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        addNetworkResponseCount();
+                    }
+                }, new DefaultErrorListener());
+                NetUtil.getUserPreference(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        userPreference = new ITCMUserPreference(response);
+                        addNetworkResponseCount();
                     }
                 }, new DefaultErrorListener());
             }

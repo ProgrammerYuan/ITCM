@@ -49,8 +49,9 @@ public class ITCMDB {
     }
 
     public static long saveUser(ITCMUser user) {
+        if (user == null) return -1;
         long id = getDB().insertWithOnConflict(ITCMUser.TABLE_NAME, null, user.getUpdateContentValue(),SQLiteDatabase.CONFLICT_IGNORE);
-        if(id == -1) return updateUser(user);
+        if (id == -1) return updateUser(user);
         return id;
     }
 
@@ -101,8 +102,9 @@ public class ITCMDB {
     }
 
     public static long saveUserPreference(ITCMUserPreference preference) {
+        if (preference == null) return -1;
         long id = getDB().insertWithOnConflict(ITCMUserPreference.TABLE_NAME, null, preference.getUpdateContentValue(),SQLiteDatabase.CONFLICT_IGNORE);
-        if(id == -1) return updatePreference(preference);
+        if (id == -1) return updatePreference(preference);
         return id;
     }
 
