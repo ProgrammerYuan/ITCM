@@ -1,18 +1,19 @@
 package com.ntucap.itcm.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.classes.ITCMUser;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.android.volley.Request.Method.POST;
@@ -43,7 +44,7 @@ public class NetUtil {
     private static final String URL_GET_USER_PREF = URL_DOMAIN + "/api/user/userPreferenceRecord";
     private static final String URL_GET_BUILDING_STATUS = URL_DOMAIN + "/api/buildingStatus";
     private static final String URL_GET_REWARD = URL_DOMAIN + "/api/rewardHistory";
-
+    private static final String URL_GET_AVATAR = URL_DOMAIN + "/api/user/userAvatar";
 
     private static final String USER_CLIENT_ID = "mobile";
     private static final String USER_CLIENT_SECRET = "e4624f06-9cda-4f25-8c88-2936617c0480";
@@ -65,7 +66,7 @@ public class NetUtil {
         }
     }
 
-    private static RequestQueue getQueueInstance() {
+    public static RequestQueue getQueueInstance() {
         if (mQueue != null) return mQueue;
         else if (mContext != null) return mQueue = Volley.newRequestQueue(mContext);
         return null;
@@ -177,7 +178,7 @@ public class NetUtil {
         HashMap<String, String> params = new HashMap<>();
         password = BCrypt.hashpw(password, USER_PASSWORD_SALT);
         params.put("password", password);
-        params.put("oldpassword", oldPassword);
+        params.put("oldpassword", BCrypt.hashpw(oldPassword, USER_PASSWORD_SALT));
         params.put("access_token", ITCMApplication.getAccessToken());
         ITCMJSONRequest request = new ITCMJSONRequest(POST, URL_CHANGE_PASSWORD, params,
                 listener, errorListener);
@@ -279,6 +280,14 @@ public class NetUtil {
                                           Response.Listener<JSONObject> listener,
                                           Response.ErrorListener errorListener) {
         requestPostWithParam(URL_UPLOAD_BAND_DATA, params, listener, errorListener);
+    }
+
+    public static void getUserAvatar(Response.Listener<byte[]> listener,
+                                    Response.ErrorListener errorListener) {
+        ITCMByteArrayRequest imageRequest = new ITCMByteArrayRequest(
+                URL_GET_AVATAR + "?access_token=386613f4-eb9a-4a99-8262-80d1848d5342",
+                listener, errorListener);
+        addRequestToQueue(imageRequest);
     }
 
     public static void requestGetWithParam(String url, Map<String, String> params,

@@ -22,7 +22,8 @@
     <string name="str_gender_format">Gender: %s</string>
     <string name="str_weight_format">Weight(kg): %d</string>
     <string name="str_height_format">Height(cm): %d</string>
-    <string name="str_forgot_password">Forgot Password?</string>
+    <string name="str_forgot_password">Forgot Password</string>
+    <string name="str_forgot_password_question">Forgot Password?</string>
 
     <!--Activity User Profile-->
     <string name="str_update_cap">UPDATE</string>
@@ -120,6 +121,8 @@
     </string-array>
 
     <!--Settings Activity-->
+    <string name="str_title_band_connection">Wristband</string>
+    <string name="str_title_bluetooth">BlueTooth</string>
     <string name="str_title_settings">Settings</string>
     <string name="str_title_device">Device</string>
     <string name="str_title_general">General</string>

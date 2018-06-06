@@ -161,7 +161,8 @@
                     android:id="@+id/et_weight_input_act_register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:maxLines="1"
                     android:hint="@string/str_weight_hint"/>
                 <ImageView
                     android:layout_width="match_parent"
@@ -180,7 +181,8 @@
                     android:id="@+id/et_height_input_act_register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:maxLines="1"
                     android:hint="@string/str_height_hint"/>
                 <ImageView
                     android:layout_width="match_parent"

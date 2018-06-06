@@ -11,12 +11,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dpizarro.uipicker.library.picker.PickerUI;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.view.CropImageView;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.events.BandConnectEvent;
+import com.ntucap.itcm.classes.events.ChooseImageEvent;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
+import com.ntucap.itcm.classes.events.RefreshEvent;
 import com.ntucap.itcm.classes.events.ShowToastEvent;
 import com.ntucap.itcm.classes.events.UploadPreferenceEvent;
 import com.ntucap.itcm.fragments.EnvironmentalFragment;
@@ -26,6 +33,7 @@ import com.ntucap.itcm.fragments.PreferenceFragment;
 import com.ntucap.itcm.fragments.RewardsFragment;
 import com.ntucap.itcm.utils.DataUtil;
 import com.ntucap.itcm.utils.EventUtil;
+import com.ntucap.itcm.utils.ITCMImageLoader;
 import com.ntucap.itcm.utils.adapters.PagerFragmentAdapter;
 import com.ntucap.itcm.utils.dialogs.ITCMDialogFragment;
 import com.ntucap.itcm.utils.dialogs.ITCMLoadingDialog;
@@ -59,6 +67,7 @@ public class MainActivity extends ITCMActivity
     private ArrayList<ITCMFragment> mFragments;
 
     private static final int ALPHA_ANIM_DURATION = 400;
+    private static final int IMAGE_PICKER = 1711;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +103,20 @@ public class MainActivity extends ITCMActivity
         mFragments.add(new RewardsFragment());
         mFragments.add(new MeFragment());
         mAdapter = new PagerFragmentAdapter(getSupportFragmentManager(), mFragments);
+        mViewpager.setOffscreenPageLimit(3);
         mViewpager.setAdapter(mAdapter);
+
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new ITCMImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(true);  //显示拍照按钮
+        imagePicker.setCrop(true);        //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true); //是否按矩形区域保存
+        imagePicker.setSelectLimit(1);    //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.CIRCLE);  //裁剪框的形状
+        imagePicker.setFocusWidth(800);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
+        imagePicker.setOutPutY(1000);//保存文件的高度。单位像素
     }
 
     private void bindListeners() {
@@ -153,11 +175,33 @@ public class MainActivity extends ITCMActivity
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(ChooseImageEvent event) {
+        Intent intent = new Intent(this, ImageGridActivity.class);
+        startActivityForResult(intent, IMAGE_PICKER);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            if (data != null && requestCode == IMAGE_PICKER) {
+                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                images.size();
+            } else {
+                Toast.makeText(this, "没有数据", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
         switch (id) {
             case R.id.iv_mask_act_main:
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if (mPicker.isPanelShown()) controlPicker(false, 0);
+                }
                 return mPicker.isPanelShown();
         }
         return false;
@@ -264,7 +308,7 @@ public class MainActivity extends ITCMActivity
                         EventBus.getDefault().post(new UploadPreferenceEvent());
                         break;
                     case 2:
-
+                        EventBus.getDefault().post(new RefreshEvent());
                         break;
                     case 3:
                         intent = new Intent(MainActivity.this, SettingsActivity.class);

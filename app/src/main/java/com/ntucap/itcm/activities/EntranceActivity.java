@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMUser;
@@ -28,6 +29,7 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
     private TextView tv_login_btn, tv_signup_btn;
     private LinearLayout ll_btns;
     private int networkResponseCount = 0;
+    private boolean mAutoLogin = true;
 
     ITCMUser updateUser = null;
     ITCMUserPreference userPreference = null;
@@ -38,12 +40,19 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrance);
+
+        Bundle data = getIntent().getExtras();
+
+        if(data != null)
+            mAutoLogin = data.getBoolean("autologin", true);
+
         tv_login_btn = (TextView) findViewById(R.id.tv_login_act_entrance);
         tv_signup_btn = (TextView) findViewById(R.id.tv_signup_act_entrance);
         ll_btns = (LinearLayout) findViewById(R.id.ll_btns_act_entrance);
         ll_btns.setAlpha(0.0f);
         bindListeners();
-        autologin();
+        if(mAutoLogin) autologin();
+        else showButtons();
     }
 
     private void bindListeners() {
@@ -90,9 +99,9 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
     }
 
     private void autologin() {
-        ITCMUser user = ITCMApplication.getCurrentUser();
-        if (user != null) {
-            final String username = user.getEmail(), password = user.getPassword();
+        updateUser = ITCMApplication.getCurrentUser();
+        if (updateUser != null) {
+            final String username = updateUser.getEmail(), password = updateUser.getPassword();
             NetUtil.login(username, password, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -103,7 +112,8 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
                         @Override
                         public void onResponse(JSONObject response) {
                             response.put("password", password);
-                            updateUser = new ITCMUser(response);
+                            ITCMUser user = new ITCMUser(response);
+                            updateUser.update(user);
                             updateUser.setIsCurrentUser(true);
                             addNetworkResponseCount();
                         }
@@ -116,7 +126,12 @@ public class EntranceActivity extends ITCMActivity implements View.OnClickListen
                         }
                     }, new DefaultErrorListener());
                 }
-            }, new DefaultErrorListener());
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    showButtons();
+                }
+            });
         } else {
             showButtons();
         }

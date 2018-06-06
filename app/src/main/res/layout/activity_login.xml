@@ -62,13 +62,14 @@
                 android:src="@color/mainTheme"
                 android:scaleType="fitXY"/>
             <TextView
+                android:id="@+id/tv_forgot_pw_act_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/mainTheme"
                 android:textStyle="bold"
                 android:gravity="end"
-                android:text="@string/str_forgot_password"/>
+                android:text="@string/str_forgot_password_question"/>
         </LinearLayout>
         <TextView
             android:id="@+id/tv_login_act_login"

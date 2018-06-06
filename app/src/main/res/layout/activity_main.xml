@@ -40,16 +40,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_actionbar"
-        android:layout_above="@+id/bottomBar" />
+        android:layout_above="@+id/bottomBarLayout" />
 
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
+    <LinearLayout
+
+        android:id="@+id/bottomBarLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_inActiveTabColor="@color/textGray"
-        app:bb_activeTabColor="@color/mainTheme"/>
+        android:layout_alignParentBottom="true">
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:elevation="8dp"
+            app:bb_tabXmlResource="@xml/bottombar_tabs"
+            app:bb_inActiveTabColor="@color/textGray"
+            app:bb_activeTabColor="@color/mainTheme"/>
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/iv_mask_act_main"

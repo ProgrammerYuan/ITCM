@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.classes.ITCMObject;
@@ -62,7 +63,7 @@ public class ITCMDB {
 
     private static long setCurrentUser(long id, boolean isCurrentUser) {
         ContentValues cv = new ContentValues();
-        cv.put(ITCMUser.COLUMN_NAME_CURRENT_USER, isCurrentUser);
+        cv.put(ITCMUser.COLUMN_NAME_CURRENT_USER, isCurrentUser ? 1 : 0);
         return getDB().update(ITCMUser.TABLE_NAME, cv,
                 ITCMUser.COLUMN_NAME_ID + " = " + id, null);
     }
@@ -84,9 +85,13 @@ public class ITCMDB {
         String sql = "select * from " + DBUtil.stringToSQLWrapper(ITCMUser.TABLE_NAME) +
                 " where " + ITCMUser.COLUMN_NAME_CURRENT_USER + " = 1;";
         Cursor cursor = getDB().rawQuery(sql, null);
+        Log.e("CurrentUser: ", String.valueOf(cursor.getCount()));
         if (validateCursor(cursor, 0)) {
             cursor.moveToFirst();
-            user = new ITCMUser(cursor);
+            for(int i = 0; i < cursor.getCount(); i ++) {
+                user = new ITCMUser(cursor);
+                cursor.moveToNext();
+            }
             cursor.close();
         }
         return user;

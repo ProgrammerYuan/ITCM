@@ -10,8 +10,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.ntucap.itcm.R;
@@ -37,6 +40,9 @@ public class ITCMDialogFragment extends DialogFragment implements View.OnClickLi
     public static final String DATA_KEY_HINT = "hint";
     public static final String DATA_KEY_CONFIRM = "confirm";
     public static final String DATA_KEY_CANCEL = "cancel";
+    public static final String DATA_KEY_HINT_GRAVITY = "gravity";
+    public static final String DATA_KEY_CANCEL_VISIBILITY = "cancel_visibility";
+    public static final String DATA_KEY_CONFIRM_VISIBILITY = "confirm_visibility";
 
     public static ITCMDialogFragment newInstance(Bundle data) {
         ITCMDialogFragment dialogFragment = new ITCMDialogFragment();
@@ -55,14 +61,19 @@ public class ITCMDialogFragment extends DialogFragment implements View.OnClickLi
         mTvTitle = (TextView) view.findViewById(R.id.tv_title_dialog_common);
         mConfirmBtn = (TextView) view.findViewById(R.id.tv_confirm_dialog_common);
         mCancelBtn = (TextView) view.findViewById(R.id.tv_cancel_dialog_common);
-        if(mConfirmListener != null) mConfirmBtn.setOnClickListener(mConfirmListener);
-        if(mCancelListener != null) mCancelBtn.setOnClickListener(mCancelListener);
+//        if(mConfirmListener != null) mConfirmBtn.setOnClickListener(mConfirmListener);
+//        if(mCancelListener != null) mCancelBtn.setOnClickListener(mCancelListener);
+        mConfirmBtn.setOnClickListener(this);
+        mCancelBtn.setOnClickListener(this);
 
         if (data != null) {
             mTvHintText.setText(data.getString(DATA_KEY_HINT, ""));
+            mTvHintText.setGravity(data.getInt(DATA_KEY_HINT_GRAVITY, Gravity.CENTER));
             mTvTitle.setText(data.getString(DATA_KEY_TITLE, ""));
             mConfirmBtn.setText(data.getString(DATA_KEY_CONFIRM, "Confirm"));
             mCancelBtn.setText(data.getString(DATA_KEY_CANCEL, "Cancel"));
+            mConfirmBtn.setVisibility(data.getInt(DATA_KEY_CONFIRM_VISIBILITY, View.VISIBLE));
+            mCancelBtn.setVisibility(data.getInt(DATA_KEY_CANCEL_VISIBILITY, View.VISIBLE));
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -81,10 +92,29 @@ public class ITCMDialogFragment extends DialogFragment implements View.OnClickLi
         mCancelListener = cancelListener;
     }
 
+    public void setConfirmBtnVisiblity(int visiblity) {
+        if(mConfirmBtn != null) mConfirmBtn.setVisibility(visiblity);
+    }
+
+    public void setCancelBtnVisiblity(int visiblity) {
+        if(mCancelBtn != null) mCancelBtn.setVisibility(visiblity);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         Log.d("DIALOG LOG:", "ONSTART!!!!!!!!!!!!!!!!!");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        window.setLayout(
+                getResources().getDimensionPixelOffset(R.dimen.dialog_default_width),
+                WindowManager.LayoutParams.WRAP_CONTENT
+        );
+        window.setGravity(Gravity.CENTER);
     }
 
     @Override

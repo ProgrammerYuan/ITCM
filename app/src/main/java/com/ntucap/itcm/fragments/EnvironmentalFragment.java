@@ -93,7 +93,7 @@ public class EnvironmentalFragment extends ITCMFragment {
     private BandHeartRateEventListener mHeartRateListener = new BandHeartRateEventListener() {
         @Override
         public void onBandHeartRateChanged(final BandHeartRateEvent event) {
-            if (event != null && mInitialized) {
+            if (event != null && getActivity() != null && mInitialized) {
                 getBandData().setHeartRate(event.getHeartRate());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -112,7 +112,7 @@ public class EnvironmentalFragment extends ITCMFragment {
     private BandCaloriesEventListener mCaloriesListener = new BandCaloriesEventListener() {
         @Override
         public void onBandCaloriesChanged(final BandCaloriesEvent event) {
-            if (event != null && mInitialized) {
+            if (event != null && getActivity() != null && mInitialized) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -131,7 +131,7 @@ public class EnvironmentalFragment extends ITCMFragment {
     private BandUVEventListener mUVListener = new BandUVEventListener() {
         @Override
         public void onBandUVChanged(final BandUVEvent event) {
-            if (event != null && mInitialized) {
+            if (event != null && getActivity() != null && mInitialized) {
                 getBandData().setUVIndexLevel(event.getUVIndexLevel());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -147,7 +147,7 @@ public class EnvironmentalFragment extends ITCMFragment {
             = new BandSkinTemperatureEventListener() {
         @Override
         public void onBandSkinTemperatureChanged(final BandSkinTemperatureEvent event) {
-            if (event != null && mInitialized) {
+            if (event != null && getActivity() != null && mInitialized) {
                 getBandData().setSkinTemp(event.getTemperature());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -166,7 +166,7 @@ public class EnvironmentalFragment extends ITCMFragment {
     private BandDistanceEventListener mDistanceListener = new BandDistanceEventListener() {
         @Override
         public void onBandDistanceChanged(final BandDistanceEvent event) {
-            if (event != null && mInitialized) {
+            if (event != null && getActivity() != null && mInitialized) {
                 getBandData().setMotionType(event.getMotionType());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -189,7 +189,7 @@ public class EnvironmentalFragment extends ITCMFragment {
     private BandBarometerEventListener mBarometerListener = new BandBarometerEventListener() {
         @Override
         public void onBandBarometerChanged(final BandBarometerEvent event) {
-            if (event != null && mInitialized) {
+            if (event != null && getActivity() != null && mInitialized) {
                 getBandData().setAirPressure(event.getAirPressure());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -338,10 +338,15 @@ public class EnvironmentalFragment extends ITCMFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        new DataUnsubscriptionTask().execute();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         appendToUI("FRAGMENT ONSTOP!!!!!!!!!");
-        new DataUnsubscriptionTask().execute();
     }
 
     private class DataSubscriptionTask extends AsyncTask<Void, Void, Void> {

@@ -24,7 +24,9 @@ public class ShowToastEvent {
     }
     
     public ShowToastEvent(int senderId, String message, int duration) {
-
+        mSenderId = senderId;
+        mMessage = message;
+        mDuration = duration;
     }
 
     public void setSenderId(int senderId) {

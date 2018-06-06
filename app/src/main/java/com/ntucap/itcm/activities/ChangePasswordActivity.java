@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -21,6 +22,7 @@ public class ChangePasswordActivity extends ITCMActivity implements View.OnClick
     private static final String LOG_TAG = "CHANGE_PW_ACTIVITY";
 
     private int inputCount = 0;
+    private ImageView mBackBtn;
     private TextView mTvSubmit;
     private EditText mOldPasswordInput, mNewPasswordInput, mConfirmPasswordInput;
 
@@ -32,6 +34,7 @@ public class ChangePasswordActivity extends ITCMActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         mTvSubmit = (TextView) findViewById(R.id.tv_submit_act_change_pw);
+        mBackBtn = (ImageView) findViewById(R.id.iv_nav_act_change_pw);
         mOldPasswordInput = (EditText) findViewById(R.id.et_old_pw_input_act_change_pw);
         mNewPasswordInput = (EditText) findViewById(R.id.et_new_pw_input_act_change_pw);
         mConfirmPasswordInput = (EditText) findViewById(R.id.et_new_pw_confirm_input_act_change_pw);
@@ -39,6 +42,8 @@ public class ChangePasswordActivity extends ITCMActivity implements View.OnClick
     }
 
     private void bindListeners() {
+        mTvSubmit.setOnClickListener(this);
+        mBackBtn.setOnClickListener(this);
         new CountTextWatcher(mOldPasswordInput);
         new CountTextWatcher(mNewPasswordInput);
         new CountTextWatcher(mConfirmPasswordInput);
@@ -55,7 +60,7 @@ public class ChangePasswordActivity extends ITCMActivity implements View.OnClick
         newPassword = mNewPasswordInput.getText().toString();
         confirmPassword = mConfirmPasswordInput.getText().toString();
 
-        if(newPassword.equals(confirmPassword)) {
+        if(!newPassword.equals(confirmPassword)) {
             toast("Please Input Consistent New Password");
             return;
         }
@@ -80,6 +85,9 @@ public class ChangePasswordActivity extends ITCMActivity implements View.OnClick
         switch (id) {
             case R.id.tv_submit_act_change_pw:
                 changePassword();
+                break;
+            case R.id.iv_nav_act_change_pw:
+                finish();
                 break;
         }
     }

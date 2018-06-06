@@ -76,6 +76,7 @@
                     android:id="@+id/et_age_input_act_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:textSize="16sp"
                     android:hint="@string/str_age_hint"/>
                 <ImageView
@@ -95,6 +96,7 @@
                     android:id="@+id/et_gender_input_act_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:textSize="16sp"
                     android:hint="@string/str_gender_hint"/>
                 <ImageView
@@ -120,7 +122,8 @@
                     android:id="@+id/et_weight_input_act_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:textSize="14sp"
                     android:hint="@string/str_weight_hint"/>
                 <ImageView
                     android:layout_width="match_parent"
@@ -139,7 +142,8 @@
                     android:id="@+id/et_height_input_act_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:textSize="14sp"
                     android:hint="@string/str_height_hint"/>
                 <ImageView
                     android:layout_width="match_parent"

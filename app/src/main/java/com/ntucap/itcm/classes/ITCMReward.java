@@ -102,6 +102,15 @@ public class ITCMReward extends ITCMObject {
         return mRemark;
     }
 
+    public String getPopUpMessage() {
+        return  "Date: " + getDate() + "\n" +
+                "Quantity: " + String.valueOf(getQty()) + "\n" +
+                "Value: " + getValueString() + "\n" +
+                "Remarks: " + "\n" +
+                mRemark;
+
+    }
+
     @Override
     public String getCreateTableSQL() {
         return null;

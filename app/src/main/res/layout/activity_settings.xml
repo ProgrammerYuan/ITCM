@@ -25,7 +25,7 @@
             android:textSize="16sp"/>
 
         <ImageView
-            android:id="@+id/iv_nav_act_data_detail"
+            android:id="@+id/iv_nav_act_settings"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_back_arrow_black"
@@ -59,7 +59,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/ll_air_temp_act_settings"
+                android:id="@+id/ll_bluetooth_act_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -83,10 +83,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_weight="1"
-                    android:text="@string/str_air_temperature" />
+                    android:text="@string/str_title_bluetooth" />
 
                 <TextView
-                    android:id="@+id/tv_air_temp_act_settings"
+                    android:id="@+id/tv_bluetooth_act_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
                     android:gravity="center"
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_weight="1"
-                    android:text="@string/str_relative_humidity" />
+                    android:text="@string/str_title_band_connection" />
 
                 <TextView
                     android:id="@+id/tv_humidity_act_settings"

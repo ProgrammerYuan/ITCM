@@ -10,6 +10,7 @@ import com.ntucap.itcm.classes.ITCMBandData;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.DataUtil;
+import com.ntucap.itcm.utils.ITCMErrorListener;
 import com.ntucap.itcm.utils.NetUtil;
 
 import java.util.Date;
@@ -36,6 +37,7 @@ public class ITCMApplication extends Application {
         super.onCreate();
         ITCMDB.init(this);
         NetUtil.init(this);
+        ITCMErrorListener.init(this);
     }
 
     public static void setAccessToken(String accessToken) {

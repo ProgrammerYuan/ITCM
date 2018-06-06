@@ -77,13 +77,11 @@ public class RegisterActivity extends ITCMActivity
 
         //Picker Data Initialization
         ages = new ArrayList<>();
-        genders = new ArrayList<>(Arrays.asList(new String[]{"Male", "Female"}));
+        genders = new ArrayList<>();
         weights = new ArrayList<>();
         heights = new ArrayList<>();
 
         initPickerDataSets();
-
-
 
         PickerUISettings pickerUISettings = new PickerUISettings.Builder()
                 .withAutoDismiss(false)
@@ -172,8 +170,8 @@ public class RegisterActivity extends ITCMActivity
 
         ret.put("email", email);
         ret.put("password", password);
-        ret.put("firstname", firstName);
-        ret.put("lastname", lastName);
+        ret.put("firstName", firstName);
+        ret.put("lastName", lastName);
         ret.put("age", String.valueOf(age));
         ret.put("gender", gender);
         ret.put("weight", String.valueOf(weight));
@@ -189,6 +187,7 @@ public class RegisterActivity extends ITCMActivity
             @Override
             public void onResponse(JSONObject response) {
                 toast("Registration succeed, check your email inbox please");
+                ITCMDB.saveUser(user);
                 Intent intent = new Intent(RegisterActivity.this, EntranceActivity.class);
                 startActivity(intent);
                 RegisterActivity.this.finish();
@@ -287,6 +286,7 @@ public class RegisterActivity extends ITCMActivity
             }
             if(originTextLength == 0) inputCount ++;
             controlPicker(false);
+            setSignupBtnState();
         } else {
             mSlideNumbers[mCurrentPickerIndex] = position;
         }

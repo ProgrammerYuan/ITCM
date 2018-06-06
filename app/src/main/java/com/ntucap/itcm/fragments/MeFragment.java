@@ -1,6 +1,8 @@
 package com.ntucap.itcm.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.ntucap.itcm.ITCMApplication;
 import com.ntucap.itcm.R;
 import com.ntucap.itcm.activities.ChangePasswordActivity;
@@ -21,13 +24,17 @@ import com.ntucap.itcm.activities.EntranceActivity;
 import com.ntucap.itcm.activities.UserProfileActivity;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.classes.ITCMUserPreference;
+import com.ntucap.itcm.classes.events.ChooseImageEvent;
 import com.ntucap.itcm.classes.events.PickerHideEvent;
 import com.ntucap.itcm.classes.events.PickerShowEvent;
 import com.ntucap.itcm.db.ITCMDB;
+import com.ntucap.itcm.utils.BitmapCache;
 import com.ntucap.itcm.utils.DataUtil;
 import com.ntucap.itcm.utils.EventUtil;
+import com.ntucap.itcm.utils.ITCMErrorListener;
 import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.dialogs.ITCMDialogFragment;
+import com.ntucap.itcm.views.CircularNetworkImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +50,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
 
     private int mClothingSN, mFeedbackSN;
 
+    private CircularNetworkImageView mIvAvatar;
     private TextView mTvUserName, mTvUserDetail;
     private LinearLayout mLLChangePassword, mLLClothing, mLLFeedbackSubmit, mLLLogout;
     private RelativeLayout mRLProfile;
@@ -51,6 +59,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentId = EventUtil.SENDER_ID_ME;
+        mNeedRegisterEventBust = true;
     }
 
     @Override
@@ -60,6 +69,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
                 R.layout.fragment_me);
         if(!mInitialized) {
             mInitialized = true;
+            mIvAvatar = (CircularNetworkImageView) mInflatedView.findViewById(R.id.iv_avatar_frag_me);
             mTvUserName = (TextView) mInflatedView.findViewById(R.id.tv_username_frag_me);
             mTvUserDetail = (TextView) mInflatedView.findViewById(R.id.tv_user_detail_frag_me);
             mLLChangePassword = (LinearLayout) mInflatedView.findViewById(R.id.ll_change_pw_frag_me);
@@ -79,6 +89,7 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
         mLLFeedbackSubmit.setOnClickListener(this);
         mLLLogout.setOnClickListener(this);
         mRLProfile.setOnClickListener(this);
+
     }
 
     private void applyData() {
@@ -86,6 +97,12 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
         mTvUserName.setText(user.getFullName());
         mTvUserDetail.setText(user.getCombinedDetail());
         user = null;
+        NetUtil.getUserAvatar(new Response.Listener<byte[]>() {
+            @Override
+            public void onResponse(byte[] response) {
+                mIvAvatar.setImageBitmap(BitmapFactory.decodeByteArray(response, 0, response.length));
+            }
+        }, ITCMErrorListener.getInstance());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -155,9 +172,12 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
                     @Override
                     public void onClick(View v) {
                         Log.d("LOGTAGDIALOG", "Confirm");
-                        if (ITCMDB.signout() != -1) {
+                        if (ITCMDB.signout() > 0) {
                             ITCMApplication.setCurrentUser(null);
                             Intent intent = new Intent(getActivity(), EntranceActivity.class);
+                            Bundle data = new Bundle();
+                            data.putBoolean("autologin", false);
+                            intent.putExtras(data);
                             getActivity().startActivity(intent);
                             getActivity().finish();
                         }
@@ -167,8 +187,9 @@ public class MeFragment extends ITCMFragment implements View.OnClickListener{
                 dialog.show(getActivity().getSupportFragmentManager(), "");
                 break;
             case R.id.rl_profile_frag_me:
-                intent = new Intent(getActivity(), UserProfileActivity.class);
-                getActivity().startActivity(intent);
+                EventBus.getDefault().post(new ChooseImageEvent());
+//                intent = new Intent(getActivity(), UserProfileActivity.class);
+//                getActivity().startActivity(intent);
                 break;
         }
     }

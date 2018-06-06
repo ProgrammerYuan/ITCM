@@ -18,6 +18,7 @@ import com.ntucap.itcm.R;
 import com.ntucap.itcm.classes.ITCMUser;
 import com.ntucap.itcm.classes.ITCMUserPreference;
 import com.ntucap.itcm.db.ITCMDB;
+import com.ntucap.itcm.utils.ITCMErrorListener;
 import com.ntucap.itcm.utils.NetUtil;
 import com.ntucap.itcm.utils.ValidationUtil;
 
@@ -25,7 +26,7 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
 
     private static final String LOG_TAG = "LoginActivity!";
 
-    private TextView tv_login_btn, tv_signup_btn;
+    private TextView tv_login_btn, tv_signup_btn, tv_forgotpw_btn;
     private EditText et_email_input, et_password_input;
     private ImageView iv_back;
     private int inputCount = 0;
@@ -43,6 +44,7 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
         setContentView(R.layout.activity_login);
         tv_login_btn = (TextView) findViewById(R.id.tv_login_act_login);
         tv_signup_btn = (TextView) findViewById(R.id.tv_signup_act_login);
+        tv_forgotpw_btn = (TextView) findViewById(R.id.tv_forgot_pw_act_login);
         et_email_input = (EditText) findViewById(R.id.et_email_input_act_login);
         et_password_input = (EditText) findViewById(R.id.et_pw_input_act_login);
         iv_back = (ImageView) findViewById(R.id.iv_back_arrow_act_login);
@@ -52,6 +54,7 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
     private void bindListeners() {
         tv_login_btn.setOnClickListener(this);
         tv_signup_btn.setOnClickListener(this);
+        tv_forgotpw_btn.setOnClickListener(this);
         new CountTextWatcher(et_email_input);
         new CountTextWatcher(et_password_input);
         iv_back.setOnClickListener(this);
@@ -87,6 +90,10 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.tv_forgot_pw_act_login:
+                intent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -114,16 +121,16 @@ public class LoginActivity extends ITCMActivity implements View.OnClickListener{
                         user.setIsCurrentUser(true);
                         addNetworkResponseCount();
                     }
-                }, new DefaultErrorListener());
+                }, ITCMErrorListener.getInstance());
                 NetUtil.getUserPreference(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         userPreference = new ITCMUserPreference(response);
                         addNetworkResponseCount();
                     }
-                }, new DefaultErrorListener());
+                }, ITCMErrorListener.getInstance());
             }
-        }, new DefaultErrorListener());
+        }, ITCMErrorListener.getInstance());
     }
 
     private void setLoginBtnState() {

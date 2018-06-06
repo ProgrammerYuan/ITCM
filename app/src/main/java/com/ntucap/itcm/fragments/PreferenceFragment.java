@@ -53,6 +53,7 @@ public class PreferenceFragment extends ITCMFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentId = EventUtil.SENDER_ID_PREFERENCE;
+        mNeedRegisterEventBust = true;
         mUserPreference = ITCMDB.getCurrentUserPreference();
         if(mUserPreference == null) mUserPreference = new ITCMUserPreference();
 

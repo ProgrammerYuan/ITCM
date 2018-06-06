@@ -25,7 +25,6 @@ import com.ntucap.itcm.db.ITCMDB;
 import com.ntucap.itcm.utils.NetUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class UserProfileActivity extends ITCMActivity 
@@ -35,7 +34,7 @@ public class UserProfileActivity extends ITCMActivity
 
     private static final String LOG_TAG = "USERPROFILEACTIVITY!!!";
     
-    private TextView tv_signup_btn, tv_age_input, tv_gender_input,  tv_weight_input, tv_height_input;
+    private TextView tv_update_btn, tv_age_input, tv_gender_input,  tv_weight_input, tv_height_input;
     private EditText et_firstname_input, et_lastname_input;
     private ImageView iv_back_btn,iv_mask;
     private PickerUI mPicker;
@@ -43,6 +42,7 @@ public class UserProfileActivity extends ITCMActivity
     private int inputCount = 0;
     private int age = -1,height, weight;
     private String gender, genderFormat, ageFormat, weightFormat, heightFormat;
+    private ITCMUser user;
 
     private int mCurrentPickerIndex;
     private int[] mSlideNumbers = new int[4];
@@ -59,7 +59,7 @@ public class UserProfileActivity extends ITCMActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        tv_signup_btn = (TextView) findViewById(R.id.tv_update_act_profile);
+        tv_update_btn = (TextView) findViewById(R.id.tv_update_act_profile);
         et_firstname_input = (EditText) findViewById(R.id.et_firstname_input_act_profile);
         et_lastname_input = (EditText) findViewById(R.id.et_lastname_input_act_profile);
         tv_age_input = (TextView) findViewById(R.id.et_age_input_act_profile);
@@ -70,9 +70,11 @@ public class UserProfileActivity extends ITCMActivity
         iv_mask = (ImageView) findViewById(R.id.iv_mask_act_profile);
         mPicker = (PickerUI) findViewById(R.id.picker_ui_act_profile);
 
+        user = ITCMApplication.getCurrentUser();
+
         //Picker Data Initialization
         ages = new ArrayList<>();
-        genders = new ArrayList<>(Arrays.asList(new String[]{"Male", "Female"}));
+        genders = new ArrayList<>();
         weights = new ArrayList<>();
         heights = new ArrayList<>();
 
@@ -86,11 +88,25 @@ public class UserProfileActivity extends ITCMActivity
                 .withUseBlur(false)
                 .build();
         mPicker.setSettings(pickerUISettings);
-        bindListeners();
+
         genderFormat = getString(R.string.str_gender_format);
         ageFormat = getString(R.string.str_age_format);
         weightFormat = getString(R.string.str_weight_format);
         heightFormat = getString(R.string.str_height_format);
+
+        applyUserData();
+        bindListeners();
+    }
+
+    private void applyUserData() {
+        if(user != null) {
+            et_firstname_input.setText(user.getFirstName());
+            et_lastname_input.setText(user.getLastName());
+            tv_age_input.setText(String.format(ageFormat, user.getAge()));
+            tv_gender_input.setText(user.getGender());
+            tv_weight_input.setText(String.format(weightFormat, user.getWeight()));
+            tv_height_input.setText(String.format(heightFormat, user.getHeight()));
+        }
     }
 
     private void initPickerDataSets() {
@@ -112,7 +128,7 @@ public class UserProfileActivity extends ITCMActivity
     }
 
     private void bindListeners() {
-        tv_signup_btn.setOnClickListener(this);
+        tv_update_btn.setOnClickListener(this);
         iv_back_btn.setOnClickListener(this);
         tv_gender_input.setOnClickListener(this);
         tv_age_input.setOnClickListener(this);
@@ -140,8 +156,8 @@ public class UserProfileActivity extends ITCMActivity
             return null;
         }
 
-        ret.put("firstname", firstName);
-        ret.put("lastname", lastName);
+        ret.put("firstName", firstName);
+        ret.put("lastName", lastName);
         ret.put("age", String.valueOf(age));
         ret.put("gender", gender);
         ret.put("weight", String.valueOf(weight));
@@ -185,9 +201,9 @@ public class UserProfileActivity extends ITCMActivity
 
     private void setSignupBtnState() {
         if(inputCount == 0) {
-            tv_signup_btn.setEnabled(false);
+            tv_update_btn.setEnabled(false);
         } else if (inputCount == MAX_INPUT_COUNT){
-            tv_signup_btn.setEnabled(true);
+            tv_update_btn.setEnabled(true);
         }
     }
 
@@ -200,9 +216,7 @@ public class UserProfileActivity extends ITCMActivity
                 updateUserInfo(checkSignUpInput());
                 break;
             case R.id.iv_back_arrow_act_profile:
-                intent = new Intent(this, EntranceActivity.class);
-                startActivity(intent);
-                finish();
+                onBackPressed();
                 break;
             case R.id.et_gender_input_act_profile:
                 mCurrentPickerIndex = GENDER_PICKER_INDEX;
@@ -265,11 +279,8 @@ public class UserProfileActivity extends ITCMActivity
     public void onBackPressed() {
         if(mPicker.isPanelShown()) {
             controlPicker(false);
-        } else {
-            Intent intent = new Intent(this, EntranceActivity.class);
-            startActivity(intent);
-            finish();
         }
+        finish();
     }
 
     @Override

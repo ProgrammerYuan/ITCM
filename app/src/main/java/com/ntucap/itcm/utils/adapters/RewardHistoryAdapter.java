@@ -20,10 +20,11 @@ import java.util.List;
  * Created by ProgrammerYuan on 28/05/17.
  */
 
-public class RewardHistoryAdapter extends SectioningAdapter {
+public class RewardHistoryAdapter extends SectioningAdapter implements View.OnClickListener{
 
     private ArrayList<Section> mSections;
     private Context mContext;
+    private OnRewardItemClickListener mRewardItemClickListener = null;
 
     class Section {
         private int type;
@@ -160,9 +161,9 @@ public class RewardHistoryAdapter extends SectioningAdapter {
     @Override
     public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
-        return new ITCMItemViewHolder(inflater.inflate(R.layout.view_common_item,null));
-
+        ITCMItemViewHolder itemViewHolder = new ITCMItemViewHolder(inflater.inflate(R.layout.view_common_item,null));
+        itemViewHolder.itemView.setOnClickListener(this);
+        return itemViewHolder;
     }
 
     @Override
@@ -187,6 +188,7 @@ public class RewardHistoryAdapter extends SectioningAdapter {
             else color = mContext.getResources().getColor(R.color.white);
             itemViewHolder.setBackground(color);
             itemViewHolder.fillData(reward);
+            itemViewHolder.itemView.setTag(reward);
 
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
@@ -201,5 +203,27 @@ public class RewardHistoryAdapter extends SectioningAdapter {
             ITCMHeaderViewHolder itemHeaderViewHolder = (ITCMHeaderViewHolder) viewHolder;
             itemHeaderViewHolder.mTvTitle.setText(mSections.get(sectionIndex).getTitle());
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        ITCMReward reward = (ITCMReward) v.getTag();
+        if(mRewardItemClickListener != null) {
+            mRewardItemClickListener.onRewardItemClick(reward);
+        }
+    }
+
+    public void setRewardItemClickListener(OnRewardItemClickListener listener) {
+        mRewardItemClickListener = listener;
+    }
+
+    public OnRewardItemClickListener getRewardItemClickListener() {
+        return mRewardItemClickListener;
+    }
+
+    public interface OnRewardItemClickListener{
+
+        void onRewardItemClick(ITCMReward reward);
+
     }
 }

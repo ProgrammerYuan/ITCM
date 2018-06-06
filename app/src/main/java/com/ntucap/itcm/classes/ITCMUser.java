@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ntucap.itcm.utils.DBUtil;
 import com.ntucap.itcm.utils.ValidationUtil;
 
+import org.jsoup.helper.StringUtil;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -48,6 +50,10 @@ public class ITCMUser extends ITCMObject implements Serializable{
         updateByJson(json);
     }
 
+    public ITCMUser(ITCMUser user) {
+
+    }
+
     public ITCMUser(Cursor cursor) {
         this();
         mId = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_ID));
@@ -67,12 +73,23 @@ public class ITCMUser extends ITCMObject implements Serializable{
         this();
         mEmail = ValidationUtil.validateHashmapGet(params, "email", "");
         mPassword = ValidationUtil.validateHashmapGet(params, "password", "");
-        mFirstName = ValidationUtil.validateHashmapGet(params, "firstname", "");
-        mLastName = ValidationUtil.validateHashmapGet(params, "lastname", "");
+        mFirstName = ValidationUtil.validateHashmapGet(params, "firstName", "");
+        mLastName = ValidationUtil.validateHashmapGet(params, "lastName", "");
         mGender = ValidationUtil.validateHashmapGet(params, "gender", "");
         mWeight = Integer.valueOf(params.get("weight"));
         mHeight = Integer.valueOf(params.get("height"));
         mAge = Integer.parseInt(ValidationUtil.validateHashmapGet(params, "age", "0"));
+    }
+
+    public void update(ITCMUser user) {
+        mEmail = user.getEmail();
+        mPassword = user.getPassword();
+        mFirstName = user.getFirstName();
+        mLastName = user.getLastName();
+        mGender = user.getGender();
+        mWeight = user.getWeight();
+        mHeight = user.getHeight();
+        mAge = user.getAge();
     }
 
     public void updateInfo(HashMap<String, String> params) {
@@ -154,8 +171,8 @@ public class ITCMUser extends ITCMObject implements Serializable{
         HashMap<String, String> data = new HashMap<>();
         data.put("email", this.mEmail);
         data.put("password", this.mPassword);
-        data.put("firstname", this.mFirstName);
-        data.put("lastname", this.mLastName);
+        data.put("firstName", this.mFirstName);
+        data.put("lastName", this.mLastName);
         data.put("age", String.valueOf(this.mAge));
         data.put("gender", this.mGender);
         data.put("weight", String.valueOf(this.mWeight));
@@ -175,8 +192,8 @@ public class ITCMUser extends ITCMObject implements Serializable{
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_GENDER) + DBUtil.SQL_VARCHAR255_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_WEIGHT) + DBUtil.SQL_INTEGER_TYPE +
                 DBUtil.stringToSQLWrapper(COLUMN_NAME_HEIGHT) + DBUtil.SQL_INTEGER_TYPE +
-                DBUtil.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtil.SQL_TINYINT_TYPE_WITHOUT_SEP +
-                ");";
+                DBUtil.stringToSQLWrapper(COLUMN_NAME_CURRENT_USER) + DBUtil.SQL_TINYINT_TYPE +
+                " UNIQUE(" + COLUMN_NAME_EMAIL + "));";
     }
 
     @Override

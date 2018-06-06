@@ -34,7 +34,7 @@
         </LinearLayout>
 
 
-        <ImageView
+        <com.ntucap.itcm.views.CircularNetworkImageView
             android:id="@+id/iv_avatar_frag_me"
             android:layout_width="72dp"
             android:layout_height="72dp"

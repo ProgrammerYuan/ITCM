@@ -28,7 +28,7 @@ import static com.github.johnpersano.supertoasts.library.Style.DURATION_MEDIUM;
 public class ITCMFragment extends Fragment {
 
     protected int mFragmentId;
-    protected boolean mInitialized = false;
+    protected boolean mInitialized = false, mNeedRegisterEventBust = false;
     protected View mInflatedView = null;
     protected Context mContext;
 
@@ -54,13 +54,13 @@ public class ITCMFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if(mNeedRegisterEventBust) EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        if(mNeedRegisterEventBust) EventBus.getDefault().unregister(this);
     }
 
     @Override
