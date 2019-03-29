@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * Created by ProgrammerYuan on 30/05/17.
+ * All my love to the iris-like girl of mine 
  */
 
 public class IrisSwitchButton extends RelativeLayout implements OnTouchListener {
